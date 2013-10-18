@@ -1,13 +1,42 @@
 \documentclass[12pt,a4paper,twoside]{article}
 
 \usepackage[utf8]{inputenc}
-
+\usepackage[ngerman]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
 \begin{document}
 \title{Text classification mit Machine Learning Methoden}
 \maketitle
 
 \section{Das Text Classification Problem}
 \label{sec:problem}
+
+Dieser Abschnitt gibt erkl"art, worum es bei Text Classication geht.
+
+Es gibt folgende Ansatze um eine Menge von Dokumenten in Klassen zu unterteilen:
+\begin{description}
+\item[Manuelle Klassifizierung]
+\item[hand-craftet Rules]
+\item[Machine learning-based] 
+\end{description}
+
+
+Bei Text Classification geht es darum, Dokumente vordefinierten Klassen zuzuordnen. Man m"ochte eine Menge von Dokumenten in Klassen unterteilen. Sucht man nur nach Dokumenten einer bestimmten Klasse, muss man nicht jedes Dokument manuell "uberpr"ufen, ob es relevant ist. Klassen k"onnen z.B. Themen sein. Man k"onnte die Dokumente zu einem Thema suchen, indem man einen boolschen Ausdruck definiert, der ausdr"uckt welche W"orter in einem Dokument enthalten sein m"ussen. Dieser Ansatz hat den Nachteil, dass es schwierig ist, geeignete boolsche Ausdr"ucke zu formulieren, die zu guten Resultaten f"uhren.
+
+Eine anderer Ansatz ist machine learning-based Text Classification. Bei diesem Ansatz wird die Regel nach, der man Dokumente, den Klassen zuteilt, aus sogenannten Trainings Daten, berechnet. Die Trainingsdaten bestehen aus einer Menge von Dokumenten, denen bereits die richtige Klasse zugeordnet wurde. Diese Zuordnung kann z.B. manuell passieren. Dieser Ansatz wird auch supervised learning oder "uberwachtes Lernen genannt. 
+
+Die generierte Regel, wird auch classifier oder classification function $\gamma$ genannt.
+\[
+\gamma : \mathbb{X} \to \mathbb{C}
+\]
+
+$\mathbb{X}$ ist der Document space und $\mathbb{C}$ ist die Menge aller Klassen.
+
+\section{Linear classifiers}
+\label{sec:linearclassifiers}
+
+\subsection{Vector space model}
+\label{sec:vectorspacemodel}
+
 
 
 \end{document}
