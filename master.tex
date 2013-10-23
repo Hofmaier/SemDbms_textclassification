@@ -5,6 +5,7 @@
 \usepackage{amsmath,amssymb,amsfonts}
 \begin{document}
 \title{Text classification mit Machine Learning Methoden}
+\author{Lukas Hofmaier \texttt{lukas.hofmaier@hsr.ch}}
 \maketitle
 
 \section{Das Text Classification Problem}
@@ -22,21 +23,59 @@ Es gibt folgende Ansatze um eine Menge von Dokumenten in Klassen zu unterteilen:
 
 Bei Text Classification geht es darum, Dokumente vordefinierten Klassen zuzuordnen. Man m"ochte eine Menge von Dokumenten in Klassen unterteilen. Sucht man nur nach Dokumenten einer bestimmten Klasse, muss man nicht jedes Dokument manuell "uberpr"ufen, ob es relevant ist. Klassen k"onnen z.B. Themen sein. Man k"onnte die Dokumente zu einem Thema suchen, indem man einen boolschen Ausdruck definiert, der ausdr"uckt welche W"orter in einem Dokument enthalten sein m"ussen. Dieser Ansatz hat den Nachteil, dass es schwierig ist, geeignete boolsche Ausdr"ucke zu formulieren, die zu guten Resultaten f"uhren.
 
-Eine anderer Ansatz ist machine learning-based Text Classification. Bei diesem Ansatz wird die Regel nach, der man Dokumente, den Klassen zuteilt, aus sogenannten Trainings Daten, berechnet. Die Trainingsdaten bestehen aus einer Menge von Dokumenten, denen bereits die richtige Klasse zugeordnet wurde. Diese Zuordnung kann z.B. manuell passieren. Dieser Ansatz wird auch supervised learning oder "uberwachtes Lernen genannt. 
+Eine anderer Ansatz ist machine learning-based Text Classification. Bei diesem Ansatz wird die Regel nach, der man Dokumente, den Klassen zuteilt, aus sogenannten Trainings Daten, berechnet. Die Trainingsdaten (training set $\mathbb{D}$ ) bestehen aus einer Menge von Dokumenten, denen bereits die richtige Klasse zugeordnet wurde. Diese Zuordnung kann z.B. manuell passieren. Dieser Ansatz wird auch supervised learning oder "uberwachtes Lernen genannt. 
 
 Die generierte Regel, wird auch classifier oder classification function $\gamma$ genannt.
 \[
 \gamma : \mathbb{X} \to \mathbb{C}
 \]
 
-$\mathbb{X}$ ist der Document space und $\mathbb{C}$ ist die Menge aller Klassen.
+$\mathbb{X}$ ist der Document space und $\mathbb{C}$ ist die Menge aller Klassen. Der Classifier nimmt ein Dokument als Input und gibt die passende Klasse zur"uck. F"ur Dokumente gibt es unterschiedliche Repr"asentationen. Eine m"ogliche Repr"asentation wird in Abschnitt \ref{sec:vectorspacemodel} erkl"art.
+
+Die Trainingsdaten sind der Input der Lernmethode $\Gamma$. $\Gamma$ gibt die classification function $\gamma$ zur"uck.
+\[
+\Gamma(\mathbb{D}) = \gamma
+\]
 
 \section{Linear classifiers}
 \label{sec:linearclassifiers}
 
 \subsection{Vector space model}
 \label{sec:vectorspacemodel}
+Die Classification function $\gamma$ bestimmt f"ur ein gegebenes Dokument $d$ die Klasse $c$. Bei den folgenden Classifier muss das Dokument als Vektor re\-pr"as\-entiert werden. Der folgenden Abschnitt beschreibt die Repr"asentation eines Dokumentes als Vektor.
 
+Um Dokumente mit den nachfolgenden Methoden zu klassifizieren, wird jedes Dokument als Vektor gespeichert. Jedem Wort von Interesse wird ein Wert zugeordnet. Eine einfache M"oglichkeit, w"are die Anzahl des Auftretens f"ur jedes Wort in dem Vektor abzuspeichern. Diese Repr"asentation ber"ucksichtig nicht, dass allgemeine W"orter wie z.B. "Auto", wenig "uber den Inhalt eines Dokumentes aussagen, aber trotzdem, oft vorkommen.
 
+Um die Seltenheit eines Wortes zu bestimmen, wird die Anzahl der Dokumente, die das Wort enthalten bestimmt. Wenn $N$ die Anzahl aller Dokumente ist kann mit der Formel
+
+\[
+idf_t = log \frac{ N}{df_f}
+\]
+
+die Seltenheit des Wortes bestimmt werden. Der Wert $idf_t$ zu einem Wort $t$ ist umso h"oher umso seltener ein Wort in einer Menge von Dokumenten vorkommnt. Man nennt diesen Wert inverse document frequency.
+
+Die Anzahl des Auftretens eines Wortes $t$ innerhalb eines Dokumentes $d$ wird term frequency $tf_{t,d}$ genannt.
+
+Die Werte $tf$ und $idf$ werden zu dem sogenannten $tf-idf$ Wert kombiniert. Dieser berechnet sich f"ur ein Wort $t$ in einem Dokument $d$ wie folgt:
+\[
+tf-idf_{t,d} = tf_{t,d} \times idf_t
+\]
+
+Bei Text classication geht es darum, "ahnliche Dokumente zu finden. Jedem Wort in einem Dokument kann der $tf-idf$ - Wert zugewiesen werden, dass heisst jedes Dokument kann als Vektor, dessen Komponenten $tf-idf$ Werte sind repr"asentiert werden. Werden alle Dokumente, die klassifiert werden, als tf-idf-Vektoren mit einem gemeinsamen Vektorraum dargestellt, spricht man vom vector space model.
+
+\subsection{Vector space classification}
+\label{sec:vectorclassification}
+
+Wie in Abschnitt \ref{sec:vectorspacemodel} erk"art, k"onnen Dokumente als Vektoren dargestellt werden. Um die Funktionsweise der nachfolgenden Methoden zu erkl"aren, haben diese Vektoren zwei Komponente. Wenn es dabei um Vektoren mit zwei Komponenten handelt, k"onnen diese als Punkte in der Ebene dargestellt werden. In der Realit"at arbeitet man mit Vektoren die Punkte in einer Hyperebene darstellen.
+
+Wenn alle Dokumente als Punkte in der Ebene dargestellt werden, de\-finiert ein linearer Klassifizierer eine Linie in dieser Ebene. Ein Algorithmus, der neue Dokumente klassifiziert, muss entscheiden, ob die Vektor space Repr"a\-sentation des Dokuments auf welcher Seite liegt. Die Linie wird auch decision boundary genannt. Die Herausforderung der text classification liegt darin, gute decision boundaries zu finden.
+
+\subsubsection{Rocchio classification}
+\label{sec:rocchio}
+
+Rocchio classifiation ist eine M"ogliches Verfahren um Dokumente zu klassifizieren. Die Grenzen zwischen den Klassen werden mit sogenannten centroids. Ein centroid ist eine Vektor, dessen Komponente die Durchschnitts\-werte aller Vektoren der selben Klasse darstellen.
+\[
+\mu(c) = frac{1,D_c}
+\]
 
 \end{document}
