@@ -3,6 +3,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage[ngerman]{babel}
 \usepackage{amsmath,amssymb,amsfonts}
+\usepackage{todonotes}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \begin{document}
 \title{Text classification mit Machine Learning Methoden}
 \author{Lukas Hofmaier \texttt{lukas.hofmaier@hsr.ch}}
@@ -46,13 +49,13 @@ Die Classification function $\gamma$ bestimmt f"ur ein gegebenes Dokument $d$ di
 
 Um Dokumente mit den nachfolgenden Methoden zu klassifizieren, wird jedes Dokument als Vektor gespeichert. Jedem Wort von Interesse wird ein Wert zugeordnet. Eine einfache M"oglichkeit, w"are die Anzahl des Auftretens f"ur jedes Wort in dem Vektor abzuspeichern. Diese Repr"asentation ber"ucksichtig nicht, dass allgemeine W"orter wie z.B. "Auto", wenig "uber den Inhalt eines Dokumentes aussagen, aber trotzdem, oft vorkommen.
 
-Um die Seltenheit eines Wortes zu bestimmen, wird die Anzahl der Dokumente, die das Wort enthalten bestimmt. Wenn $N$ die Anzahl aller Dokumente ist kann mit der Formel
+Um die Seltenheit eines Wortes zu bestimmen, wird die Anzahl der Dokumente, die das Wort enthalten bestimmt. Wenn $N$ die Anzahl aller Dokumente ist, kann mit der Formel
 
 \[
 idf_t = log \frac{ N}{df_f}
 \]
 
-die Seltenheit des Wortes bestimmt werden. Der Wert $idf_t$ zu einem Wort $t$ ist umso h"oher umso seltener ein Wort in einer Menge von Dokumenten vorkommnt. Man nennt diesen Wert inverse document frequency.
+die Seltenheit des Wortes bestimmt werden. Der Wert $idf_t$ zu einem Wort $t$ ist umso h"oher umso seltener ein Wort in einer Menge von Dokumenten vorkommnt. Man nennt diesen Wert inverse document frequency\cite{manning08}.
 
 Die Anzahl des Auftretens eines Wortes $t$ innerhalb eines Dokumentes $d$ wird term frequency $tf_{t,d}$ genannt.
 
@@ -60,6 +63,16 @@ Die Werte $tf$ und $idf$ werden zu dem sogenannten $tf-idf$ Wert kombiniert. Die
 \[
 tf-idf_{t,d} = tf_{t,d} \times idf_t
 \]
+
+\begin{table}
+  \centering
+  \begin{tabular}{l l l l l l}
+    & Dok1 & Dok2 & Dok3 & idf & tf-idf Dok1 \\
+    Chip & 27 & 4 & 24 & 1.65 &44.5  \\
+  \end{tabular}
+  \caption{tf-idf Werte }
+  \label{tab:temporal_operators}
+\end{table}
 
 Bei Text classication geht es darum, "ahnliche Dokumente zu finden. Jedem Wort in einem Dokument kann der $tf-idf$ - Wert zugewiesen werden, dass heisst jedes Dokument kann als Vektor, dessen Komponenten $tf-idf$ Werte sind repr"asentiert werden. Werden alle Dokumente, die klassifiert werden, als tf-idf-Vektoren mit einem gemeinsamen Vektorraum dargestellt, spricht man vom vector space model.
 
@@ -70,12 +83,39 @@ Wie in Abschnitt \ref{sec:vectorspacemodel} erk"art, k"onnen Dokumente als Vekto
 
 Wenn alle Dokumente als Punkte in der Ebene dargestellt werden, de\-finiert ein linearer Klassifizierer eine Linie in dieser Ebene. Ein Algorithmus, der neue Dokumente klassifiziert, muss entscheiden, ob die Vektor space Repr"a\-sentation des Dokuments auf welcher Seite liegt. Die Linie wird auch decision boundary genannt. Die Herausforderung der text classification liegt darin, gute decision boundaries zu finden.
 
+\todo{Bild von 2D Plane mit decision boundiary erstellen}
+
 \subsubsection{Rocchio classification}
 \label{sec:rocchio}
 
-Rocchio classifiation ist eine M"ogliches Verfahren um Dokumente zu klassifizieren. Die Grenzen zwischen den Klassen werden mit sogenannten centroids. Ein centroid ist eine Vektor, dessen Komponente die Durchschnitts\-werte aller Vektoren der selben Klasse darstellen.
+Rocchio classifiation ist ein m"ogliches Verfahren um Dokumente zu klassifizieren. Die Grenzen zwischen den Klassen werden mit sogenannten centroids definiert. Ein centroid ist eine Vektor, dessen Komponente die Durchschnitts\-werte aller Vektoren der selben Klasse darstellen.
 \[
-\mu(c) = frac{1,D_c}
+\vec \mu(c) = \frac{1}{|D_c|} \sum_{d \in D} \vec v (d)
 \]
+$\vec (d)$ ist die Vektor space Repr"asentation. $D_c$ ist die Menge aller Dokumente der Klasse, dessen centroid berechnet werden soll.
+
+Neue Dokumente werden nach folgender Regel zugeordnet: Es wird die tdf-idf repr"asentation $\vec v (d)$ f"ur das neue Dokument $d$ berechnet. Dann wird $d$ derjenigen Klasse zugeordnet zu dessen centroid $\vec v (d)$ die geringste Distanz hat.
+
+\begin{algorithm}
+\caption{Rocchio Trainings-Algorithmus}
+\begin{algorithmic}
+
+\ForAll{ $c_i \in $ Klasses} 
+\State $ D_j \gets  \{d : (d,c_j) \in$ Classes $\}$
+\State  $\vec \mu_j \gets \frac{1}{|D_c|} \sum_{d \in D} \vec v (d)$
+\EndFor
+
+\Return ${\vec \mu_1, \dots , \vec \mu_n }$    
+ \end{algorithmic}  
+\end{algorithm}
+
+\begin{thebibliography}{99}
+\bibitem{manning08}
+Christopher D.Manning Prabhakar Raghavan Hinrich Sch"utze,
+Introduction to Information Retrieval,
+Cambridge University Press,
+2008.
+\end{thebibliography}
+
 
 \end{document}
