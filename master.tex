@@ -109,6 +109,20 @@ Neue Dokumente werden nach folgender Regel zugeordnet: Es wird die tdf-idf repr"
  \end{algorithmic}  
 \end{algorithm}
 
+\subsubsection{Support vector machines}
+\label{sec:svm}
+
+In diesem Abschnitt wird die Methode Support Vector Machines ( SVM) f"ur Text Classiciation vorgestellt. Wie in Abschnitt \ref{vectorclassification} erkl"art, definiert ein Klassifizierer eine Hyperebene. Diese ist definiert durch den Achsenabschnitt $b$ und den Normalenvektor $ \vec w $. Alle Punkte $\vec x $ die auf dieser Hyperebene liegen, erf"ullen die Gleichung 
+\[
+\vec w^T \vec x = -b
+\].
+
+Um neue Dokumente k"onnen wie folgt klassifiziert werden: Die Funktion
+\[
+f(\vec x ) = sign( \vec w^T \vec x + b)
+\]
+wird ausgewertet. Je nachdem, ob der Wert $1$ oder $-1$ ist wird das Dokument einer Klasse zugeordnet.
+
 \begin{thebibliography}{99}
 \bibitem{manning08}
 Christopher D.Manning Prabhakar Raghavan Hinrich Sch"utze,
