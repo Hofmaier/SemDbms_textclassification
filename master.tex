@@ -1,3 +1,4 @@
+
 \documentclass[12pt,a4paper,twoside]{article}
 
 \usepackage[utf8]{inputenc}
@@ -40,6 +41,8 @@ Die Trainingsdaten sind der Input der Lernmethode $\Gamma$. $\Gamma$ gibt die cl
 \Gamma(\mathbb{D}) = \gamma
 \]
 
+
+
 \section{Linear classifiers}
 \label{sec:linearclassifiers}
 
@@ -70,11 +73,14 @@ tf-idf_{t,d} = tf_{t,d} \times idf_t
     & Dok1 & Dok2 & Dok3 & idf & tf-idf Dok1 \\
     Chip & 27 & 4 & 24 & 1.65 &44.5  \\
   \end{tabular}
-  \caption{tf-idf Werte }
+  \caption{tf-idf Beispiel Werte }
   \label{tab:temporal_operators}
 \end{table}
 
 Bei Text classication geht es darum, "ahnliche Dokumente zu finden. Jedem Wort in einem Dokument kann der $tf-idf$ - Wert zugewiesen werden, dass heisst jedes Dokument kann als Vektor, dessen Komponenten $tf-idf$ Werte sind repr"asentiert werden. Werden alle Dokumente, die klassifiert werden, als tf-idf-Vektoren mit einem gemeinsamen Vektorraum dargestellt, spricht man vom vector space model.
+
+
+
 
 \subsection{Vector space classification}
 \label{sec:vectorclassification}
@@ -109,8 +115,11 @@ Neue Dokumente werden nach folgender Regel zugeordnet: Es wird die tdf-idf repr"
  \end{algorithmic}  
 \end{algorithm}
 
-\subsubsection{Support vector machines}
+\section{Support vector machines}
 \label{sec:svm}
+
+
+Gegeben ist eine Menge von Punkten die man in zwei Gruppen aufteilen m"ochte.  Die Kategorien oder Gruppen werden getrennt durch eine Hyperebene.
 
 In diesem Abschnitt wird die Methode Support Vector Machines ( SVM) f"ur Text Classiciation vorgestellt. Wie in Abschnitt \ref{vectorclassification} erkl"art, definiert ein Klassifizierer eine Hyperebene. Diese ist definiert durch den Achsenabschnitt $b$ und den Normalenvektor $ \vec w $. Alle Punkte $\vec x $ die auf dieser Hyperebene liegen, erf"ullen die Gleichung 
 \[
