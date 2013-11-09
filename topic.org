@@ -1,0 +1,32 @@
+#+TITLE Aufgabenstellung Seminar: Datenbanken HS13
+** Einleitung
+Das Fachgebiet Information Retrieval besch"aftigt sich unter anderem mit dem Problem eine grosse Menge von Dokumenten verschiedenen Themen zuzuweisen. User m"ochten beispielweise erfahren wenn neue Dokumente publiziert werden, die von "Multicorechips" handeln oder mit dem Thema in Beziehung stehen. Ist die Anzahl der neu hinzukommenden Dokumente zu gross um sie von Hand auszusortieren benoetigt man ein automatisiertes System, dass diese Aufgabe uebernimmt.
+
+Dieses Problem kann generalisiert werden. Gegeben eine Menge von Klassen. Man moechte Objekte diesen Klassen zuordnen. Zu klassifizierende Objekte sollen als automatisiert in Klassen eingeteilt werden. Dieses Problem nennt man Klassifizierung. Wenn es sich bei den Objekten um Dokumente handelt, spricht man auch von text classification, text categorization, topic classification. oder topic spotting. Dokumente werden Dokumentklassen zugeordnet. Im Beispiel gibt es zwei Klassen. Artikel die von "Multicorechips" handeln und Artikel, die nicht von "Multicorechips" handeln".
+
+Im Fachgebiet Information Retrieval wird Klassifizierung fuer folgende Aufgaben eingesetzt:
+
+-Encoding detecting
+-Sprache in Dokument erkennen
+-Spamdetection
+-Sentiment detection
+-Automatisch e-Mail sortieren
+-Dokumentranking in Queryresult
+
+Klassifizierung kann man weiter in unueberwachte und ueberwachte, automatische Klassifizierung (supervised learning) unterteilen. Bei der ueberwachten Klassifizierung wird das Zuordnungs Kriterium aufgrund von Trainingsdaten berechnet. Im Beispiel von text classification beinhalten Trainingsdaten richtige Zuordnungen von Dokumenten zu Klassen. Diese manuelle Zuordnung kann bei Dokumenten und Dokumentklassen einfach vorgenommen werden. Fuer einen Mensch ist es einfach einen Text einem vorgegebenen Thema zuzuordnen. Ein kuenstliches System kann nach der Analyse der Trainingsdaten, Gesetzmaessigkeiten erkennen und diese dann auf neue Daten anwenden. Dieses Vorgehen nennt man Machine Learning. Im Bereich von Information Retrieval wird diese Ansatz auch als Statistical text classification 
+** Aufgabenstellung
+Fuer ueberwachte, automatische Klassifizierung existieren mehrere Algorithmen. In dieser Seminararbeit werden die Analyseverfahren der logistischen Regression und Support Vector Machine (SVM) und deren Implementation erklaert und analysiert.
+
+*** Theorie
+Die Funktionsweise der Klassifierer logistische Regression und SVM soll erklaert und beschrieben werden. Die mathematischen Herleitung soll aufgezeigt werden. Dabei wird beschrieben, wie der Trainingsalgorithmus mathematisch modelliert wird, wie das mathematische Problem optimiert wird und wie neue Objekte zugeordnet werden.
+
+*** Praxis
+Die Algorithmen werden mit Octave / Python implementiert um die funktionsweise zu demonstrieren.
+
+** Ergebnisse
+Ein Artikel, der logistische Regression und Support Vector Machines beschreibt.
+
+** Quellen
+Introduction  to Information Retrieval, Christopher D. Manning, Prabhakar Raghavan, Hinrich Schuetze, Cambridge
+
+
