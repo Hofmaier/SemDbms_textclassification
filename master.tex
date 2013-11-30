@@ -6,8 +6,17 @@
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{todonotes}
 \usepackage{algorithm}
+\usepackage{listings}
 \usepackage{algpseudocode}
 \begin{document}
+
+\lstset{
+basicstyle=\small\ttfamily,
+xleftmargin=3.5em,
+language=Promela,
+captionpos=b
+}
+
 \title{Text classification mit Machine Learning Methoden}
 \author{Lukas Hofmaier \texttt{lukas.hofmaier@hsr.ch}}
 \maketitle
@@ -40,8 +49,6 @@ Die Trainingsdaten sind der Input der Lernmethode $\Gamma$. $\Gamma$ gibt die cl
 \[
 \Gamma(\mathbb{D}) = \gamma
 \]
-
-
 
 \section{Linear classifiers}
 \label{sec:linearclassifiers}
@@ -79,9 +86,6 @@ tf-idf_{t,d} = tf_{t,d} \times idf_t
 
 Bei Text classication geht es darum, "ahnliche Dokumente zu finden. Jedem Wort in einem Dokument kann der $tf-idf$ - Wert zugewiesen werden, dass heisst jedes Dokument kann als Vektor, dessen Komponenten $tf-idf$ Werte sind repr"asentiert werden. Werden alle Dokumente, die klassifiert werden, als tf-idf-Vektoren mit einem gemeinsamen Vektorraum dargestellt, spricht man vom vector space model.
 
-
-
-
 \subsection{Vector space classification}
 \label{sec:vectorclassification}
 
@@ -115,22 +119,223 @@ Neue Dokumente werden nach folgender Regel zugeordnet: Es wird die tdf-idf repr"
  \end{algorithmic}  
 \end{algorithm}
 
+\section{Logistische Regression}
+\label{sec:logisticreg}
+
+Ein Klassifizierer kann ein neues Objekt, das als Vektor repr"asentiert wird, einer Klasse zuteilen. In nachfolgenden Abschnitt geht es immer darum ein Objekt in eine von zwei Klassen einzuteilen. Den Klassen k"onnen mit den Zahlen 1 und 0 beschriftet (gelabelt) werden. Ein Klassifizierer nimmt als Input einen Vektor und gibt 0 oder 1 aus. Ein solcher Klassifizierer kann als Funktion modelliert werden, die 0 oder 1 ausgibt. Da eine Funktion, die nur die beiden diskreten Werte 0 oder 1 ausgibt, mathematisch schwieriger zu handhaben ist, nutzt man die sogenannnte Sigmoidfunktion. Abbildung \ref{fig:sigmoidfunc} zeigt einen Plot der Sigmoidfuncktion. 
+
+\[
+g(z) = \frac{1}{1 + e^{-z}}
+\]
+
+
+\begin{figure}
+  \includegraphics[scale=0.3]{sigmoid}
+  \centering
+  \label{fig:sigmoidfunc}
+  \caption{Plot der Sigmoidfunktion}
+\end{figure}
+
+Der Wertebereich der Sigmoidfunktion liegt zwischen 0 und 1. Bei einer Eingabe von 0 gibt die Funktion 0.5 zur"uck.
+
+Der Klassifizierer berechnet das Skalarprodukt des Featurevektor $x$ und einem Paramatervektor $\Theta$ Theta aus.
+
+\[
+z = \Theta^T x
+\]
+
+Dieser Wert dient als Input f"ur die Sigmoidfunktion. Ist der Wert gr"osser 0.5, das heisst das Skalarprodukt ist gr"osser 0, wird das Objekt der Klasse mit dem Label 1 zugewiesen. Ist der Wert kleiner 0.5 wird das Objekt der Klasse mit Label 0 zugewiesen. Die Aufgabe des Klassifizierungalgorithmus ist es, die Werte des Parametervektors zu bestimmen, so dass m"oglichst viele Objekte in den Trainingsdaten richtig klassifiziert werden. 
+
+\subsection{Kostenfunktion}
+\label{sec:costfunction}
+
+Der Klassifizierer soll denjenigen Paramtervektor $\Theta$ finden, der die Objekte der Trainingsmenge mit der gr"ossten Wahrscheinlichkeit richtig einordnen kann. Um zu bestimmen wie gut die Wahl der Koeffizienten $\Theta$ ist, wird folgende Funktoin verwendet.
+
+\begin{equation}
+  \label{eq:costfunction}
+  J(\theta) = \left \{
+    \begin{array}{l l}
+      -\log(h_{\theta} (x)) & \quad \text{if $y==1$}\\
+      -\log(1-h_{\theta} (x)) & \quad \text{if $y==0$}
+    \end{array} \right.
+\end{equation}
+
+Diese Funktion \ref{eq:costfunction} gibt f"ur $y==1$ grosse Werte zur"uck, wenn $h_{\theta}$ nahe bei $0$ liegt und sie gibt genau $0$ zur"uck, wenn $h_{\theta}$ $1$ ist. Das heisst, wenn $h_{\theta}$ und $y$ "ubereinstimmen ist der Wert klein, sonst gross. Bei $y==0$ ist es genau umgekehrt. Und der Klassifiziereralgorithmus soll $\theta$ so w"ahlen, dass $h_{\theta}$ und $y$  f"ur alle Trainingsbeispiele m"oglichst "ubereinstimmen. Die Funktion \ref{eq:costfunction} soll also minimiert werden.
+
+\begin{equation}
+  \label{eq:minimize}
+  \underset{\theta}{\text{min}} J(\theta)
+\end{equation}
+
+Diese Funktion kann ohne Unterscheidung, ob $y$ 1 oder 0 ist, wie folgt geschrieben werden. 
+
+\begin{equation}
+  \label{eq;simplecostfunction}
+  J( \theta ) = - \frac{1}{m} \sum_{i=1}^m y^{(i)} \log h_{\theta}(x^{(i)}) + (1 - y^{(i)}) \log(1 - h_{\theta}(x^{(i)}))
+\end{equation}
+
+Die Kostenfunktion z"ahlt die Abweichungen vom Sollwert aller $m$ Trainingsbeispiele zusammen. $x^{(i)}$ und $y^{(i)}$ bezeichnen ein Objekt aus der Trainingsmenge.
+
+Die Funktion $J(\theta)$ gibt kleine Werte zur"uck, wenn $\theta x$ Werte sind, die weiter entfernt von 0 sind. Das heisst, je weiter weg die Objekte der Trainingsmenge von der descision boundary. Der Klassifizierer soll eine Descision Boundary finden, die von allen Punkten den gr"ostm"oglichen Abstand hat. Die Funktion $J(\theta)$ soll also minimiert werden. Dies kann beispielsweise mit dem Gradientenabstieg gemacht 
+
+\subsection{Gradientenverfahren}
+\label{sec:gradientdescent}
+
+Im Abschnitt \ref{sec:costfunction} haben wir gezeigt, dass die Decision Boundary f"ur einen Klassifizierer algorithmisch gefunden werden kann, indem die Kostenfunktion \ref{eq:simplecostfunction} minimiert wird. Der Algorithmus soll die Paramter $\theta$ finden, so dass \ref{eq:simplecostfunction} minimiert wird. Eine M"oglichkeit die Kostenfunktion zu minimeren ist das Gradientenverfahren. Der Gradient einer Funktion zeigt in die Richtung des steilsten Aufstiegs \cite{teschl07}. Der negative Gradient in Richtung des steilsten Abstiegs. Wenn man den negativen Gradienten von der aktuellen Position subtrahiert, wird die Funktion ein wenig minimiert. Wiederholt man diesen Schritt beliebig oft, konvergiert der Algorithmus irgendwann bei einem lokalen Minimum. Wie gross die Schritte in Richtung Minimum sind, wird mit dem Paramter $\alpha$ festgelegt. Der Gradient ist ein Vektor dessen Elemente die partiellen Ableitungen jedes einzelnen Features sind.
+
+\begin{algorithm}
+\caption{Gradientenverfahren}
+\begin{algorithmic}
+
+\Repeat \{ \\
+$\theta_j := \theta_j - \alpha \frac{\partial}{\partial \theta_j} J(\theta)$  \\
+\}
+\Until $\theta$ konvergiert 
+
+ \end{algorithmic}  
+\end{algorithm}
+
+Wir wenden das Gradientenverfahren auf die Kostenfunktion an. Zuerst wird die Kostenfunktion partiell abgeleitet.
+\begin{equation}
+  \label{eq:costderivativ}
+  \frac{\partial}{\partial \theta_j} J(\theta) = \frac{1}{m} \sum_{i=1}^m (h_{\theta} (x^{(i)}) - y^{(i)})x_j^{(i)}
+\end{equation}
+
+Die abgeleitete Kostenfunktion kann man im Gradientenverfahren einsetzen und erh"alt:
+\begin{algorithm}
+\caption{Gradientenverfahren}
+\begin{algorithmic}
+
+\Repeat \{ \\
+$\theta_j := \theta_j - \alpha \frac{\partial}{\partial \theta_j} J(\theta) = \frac{1}{m} \sum_{i=1}^m (h_{\theta} (x^{(i)}) - y^{(i)})x_j^{(i)}$  \\
+\}
+\Until $\theta$ konvergiert 
+
+ \end{algorithmic}  
+\end{algorithm}
+
+Das Gradientenverfahren liefert den Vektor $theta$ der ein Minimum der Kostenfunktion findet. Mit diesem $\theta$ k"onnen neue Instanzen nach der folgenden Regel klassifiziert werden.
+
+Wenn $\theta^T x \geq 0$ dann $y=1$
+
+Wenn $\theta^T x < 0$ dann $y=0$
+
+Das Listing \ref{lst:logisticregression} zeigt eine Implementation in Octave des Verfahrens.
+
+\subsection{Implementation}
+\label{sec:implementation}
+Die Trainingsbeispiele werden in eine Matrix geladen. In dieser Matrix entspricht jede Zeile einem Objekt. Die korrekte Klassifizierung wird in einen Vektor y geladen. Die Elemente von y sind 1 oder 0. In der Variablen \verb|m| wird die Anzahl der Beispiele gespeichert. In der Beispielimplementation werden die Objekte mit zwei reelen Zahlen beschrieben. Dass heisst die Matrix \verb|X| hat die Dimension $m \times 2$. Um die Hypthesenfunktion einfach auf alle Beispiele anzuwenden, wird der Matrix \verb|X| eine Kolonne mit 1en hinzugef"ugt. Dadurch kann man mit der Matrix-Vektor Multiplikation von allen Beispielen den Wert der Hypthesenfunktion ausrechnen.
+
+\begin{lstlisting}
+h_theta = sigmoid(X * theta);
+\end{lstlisting}
+
+Der Gradient der Kostenfunktion berechnet sich wie folgt:
+
+\begin{equation}
+\frac{1}{m} \sum_{i=1}^m (h_{\theta} (x^{(i)}) - y^{(i)})x_j^{(i)}  
+\end{equation}
+
+Die Berechnung dieses Term k"onnte man mit einem for-loop "uber alle Beispiele der Trainingsmenge implementieren. Eleganter und einfacher auf mehrere Cores zu verteilen ist folgenden Implementation:
+
+\begin{lstlisting}
+function grad = gradient(theta, X, y)
+m = length(y);
+h_theta = sigmoid(X * theta);
+grad = 1/m .* (X' * (h_theta - y));
+end
+\end{lstlisting}
+
+Der Ausdruck 
+\begin{lstlisting}
+X' * (h_theta - y)
+\end{lstlisting}
+summiert alle Produkte $(h_{\theta} (x^{(i)}) - y^{(i)})x_j^{(i)}  $ "uber die gesamte Trainingsmenge. Somit wird
+
+\begin{equation}
+   \sum_{i=1}^m (h_{\theta} (x^{(i)}) - y^{(i)})x_j^{(i)}
+\end{equation}
+
+berechnet.
+
+\subsection{Regularisation}
+\label{sec:regularization}
+
+Um Overfitting zu vermeiden, begrenzt man die Werte in $\theta$. Dies wird dadruch erreicht, dass man der Kostenfunktion den Term $\frac{\lambda}{2m} \sum_{j=1}^n \theta^2$ hinzuf"ugt. Es wird also foglende Funktion minimiert.
+\begin{equation}
+  \label{eq:regularization}
+  \underset{\theta}{\text{min}}  J(\theta) = -\frac{1}{m} \sum_{i=1}^m y^{(i)} \log h_{\theta}(x^{(i)}) + (1 - y^{(i)}) \log(1 - h_{\theta}(x^{(i)}))+\frac{\lambda}{2m} \sum_{j=1}^n \theta^2
+\end{equation}
+
 \section{Support vector machines}
 \label{sec:svm}
 
+Dieser Abschnitt beschreibt einen weiteren Klassifikationsalgorithmus. Es geht um Support Vector Machines (SVM's). Dieser Algorithmus ist in der Industrie sehr verbreitet.
 
-Gegeben ist eine Menge von Punkten die man in zwei Gruppen aufteilen m"ochte.  Die Kategorien oder Gruppen werden getrennt durch eine Hyperebene.
+Bei logistischer Regression soll sich die Hypothesenfunktion $h_{\theta}$ wie folgt verhalten.
+Wenn $y == 1$, dann soll $h_{\theta} \approx 1$, Dass heisst $\theta^T x \gg 0$. Und wenn $y == 0$, dann $h_{\theta} \approx 0$. Bei SVM wird gefordert, dass $\theta^T x \geq 1$ f"ur $y == 1$ und $\theta^T x \leq -1$ f"ur $y == 0$.
 
-In diesem Abschnitt wird die Methode Support Vector Machines ( SVM) f"ur Text Classiciation vorgestellt. Wie in Abschnitt \ref{vectorclassification} erkl"art, definiert ein Klassifizierer eine Hyperebene. Diese ist definiert durch den Achsenabschnitt $b$ und den Normalenvektor $ \vec w $. Alle Punkte $\vec x $ die auf dieser Hyperebene liegen, erf"ullen die Gleichung 
+Wenn $\theta$ diese Beschr"ankung einh"alt, tr"agen die Objekte in der Trainimgsmenge nichts zu Kostenfunktion bei.
+
+Der erste Teil der Optimierungsproblems der logistischen Regression
+\begin{equation}
+  \label{eq:costsvm}
+\underset{\theta}{\text{min}}   = y^{(i)} cost_1(h_{\theta}(x^{(i)})) + (1 - y^{(i)})(cost_2(h_{\theta}(x^{(i)}))) 
+\end{equation}
+wird 0. Dass heisst es bleibt nur noch
+
+\begin{equation}
+  \label{eq:opt}
+  \underset{\theta}{\text{min}}  J(\theta) = \frac{\lambda}{2m} \sum_{j=1}^n \theta^2
+\end{equation}
+
+Man nennt SVM's auch Large Margin Classifier weil die decision boundary so
+
+Wie in Abschnitt \ref{vectorclassification} erkl"art, definiert ein Klassifizierer eine Hyperebene. Diese ist definiert durch den Achsenabschnitt $b$ und den Normalenvektor $ \vec w $. Alle Punkte $\vec x $ die auf dieser Hyperebene liegen, erf"ullen die Gleichung 
 \[
 \vec w^T \vec x = -b
 \].
 
-Um neue Dokumente k"onnen wie folgt klassifiziert werden: Die Funktion
+Neue Dokumente k"onnen wie folgt klassifiziert werden: Die Funktion
 \[
 f(\vec x ) = sign( \vec w^T \vec x + b)
 \]
 wird ausgewertet. Je nachdem, ob der Wert $1$ oder $-1$ ist wird das Dokument einer Klasse zugeordnet.
+
+Support Vectors (St"utzvektoren) sind die Objekte die am nahesten bei der Decision Boundary sind. SVM's finden eine Hyperebene, die die Datenmenge so trennt, dass die St"utzvektoren m"oglichst weit entfernt von der Decision Boundary sind. Der Abstand von Punkten die der Decision Boundary am n"achsten sind, soll also  maximiert werden. Man sagt dazu, dass die Daten mit maximaler Trennspanne getrennt werden $\vec w$ muss folgende Forderung erf"ullen.
+
+\[
+\vec w^T \vec x_i + b \geq 1 \text{f"ur} y_i = 1
+\]
+
+\[
+\vec w^T \vec x_i + b \leq 1 \text{f"ur} y_i = 0
+\]
+
+Der Abstand von einem Punkt zur Hyperebene l"asst sich berechnen durch
+
+\[
+\frac{\vec w}{||w||} \vec x_i + \frac{b}{||w||}
+\]
+
+Das heisst die beiden Punkte, die der Decision Boundary am n"achsten sind, haben jeweils den Abstand $\frac{1}{||w||}$. Die gesamte Trennspanne ist also $\frac{1}{||w||}$. Die Trennspanne soll maximiert werden. Das heisst $||w||$ soll minimiert werden. Um die beste Decision Boundary zu finden m"ussen wir folgendes Optimierungsproblem l"osen.
+
+ \begin{equation*}
+\begin{aligned}
+& \underset{x}{\text{minimiere}}
+& & \lVert \vec w \rVert^2 \\
+& \text{subject to}\\
+& & \vec{w}^T \vec{x_i} + b \geq 1, \; y_i = 1 \\
+& & \vec{w}^T \vec{x_i} + b \leq -1, \;  y_i = 0
+\end{aligned}
+\end{equation*}
+
+\appendix
+
+\section{Octave Demo: Logistische Regression}
+\label{sec:code}
+
+\lstinputlisting[label={lst:logisticregression},caption={Octave Skript f"ur logistische Regression},numbers=left]{logisticregression.m}
 
 \begin{thebibliography}{99}
 \bibitem{manning08}
@@ -138,6 +343,12 @@ Christopher D.Manning Prabhakar Raghavan Hinrich Sch"utze,
 Introduction to Information Retrieval,
 Cambridge University Press,
 2008.
+
+\bibitem{teschl07}
+Gerald Teschl Susanne Teschl,
+Mathematik f"ur Informatiker: Analysis und Statistik,
+Springer,
+2007
 \end{thebibliography}
 
 
