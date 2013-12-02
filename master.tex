@@ -28,9 +28,9 @@ Dieser Abschnitt gibt erkl"art, worum es bei Text Classication geht.
 
 Es gibt folgende Ansatze um eine Menge von Dokumenten in Klassen zu unterteilen:
 \begin{description}
-\item[Manuelle Klassifizierung]
-\item[hand-craftet Rules]
-\item[Machine learning-based] 
+\item[Manuelle Klassifizierung] Eine Person ordnet Text manuell einem bestimmten Thema zu. Dieser Ansatz skaliert nicht.
+\item[Standing queries] Es werden f"ur jedes Thema eigene Queries geschrieben, die in einer Menge von Dokumenten die richtigen finden. Dieser Ansatz funktioniert sehr gut. Die Regeln m"ussen f"ur jedes Thema einzeln angefertigt werden. Gute Regeln erfodern, dass der Autor der Regel sich mit Queries und der Domain auskennt.
+\item[Machine learning-based] Der Computer generiert eine Regel aufgrund von richtigen Zuordnungen. Diese Regel kann danach auf neue Dokumente angewandt werden.
 \end{description}
 
 
@@ -38,26 +38,29 @@ Bei Text Classification geht es darum, Dokumente vordefinierten Klassen zuzuordn
 
 Eine anderer Ansatz ist machine learning-based Text Classification. Bei diesem Ansatz wird die Regel nach, der man Dokumente, den Klassen zuteilt, aus sogenannten Trainings Daten, berechnet. Die Trainingsdaten (training set $\mathbb{D}$ ) bestehen aus einer Menge von Dokumenten, denen bereits die richtige Klasse zugeordnet wurde. Diese Zuordnung kann z.B. manuell passieren. Dieser Ansatz wird auch supervised learning oder "uberwachtes Lernen genannt. 
 
-Die generierte Regel, wird auch classifier oder classification function $\gamma$ genannt.
+Die generierte Regel, wird auch Klassifizierer oder Entscheidungsfunktion $\gamma$ genannt.
 \[
 \gamma : \mathbb{X} \to \mathbb{C}
 \]
 
-$\mathbb{X}$ ist der Document space und $\mathbb{C}$ ist die Menge aller Klassen. Der Classifier nimmt ein Dokument als Input und gibt die passende Klasse zur"uck. F"ur Dokumente gibt es unterschiedliche Repr"asentationen. Eine m"ogliche Repr"asentation wird in Abschnitt \ref{sec:vectorspacemodel} erkl"art.
+$\mathbb{X}$ ist der Document space und $\mathbb{C}$ ist die Menge aller Klassen. Der Klassifizierer nimmt ein Dokument als Input und gibt die passende Klasse zur"uck. F"ur Dokumente gibt es unterschiedliche Repr"asentationen. Eine m"ogliche Repr"asentation wird in Abschnitt \ref{sec:vectorspacemodel} erkl"art.
 
-Die Trainingsdaten sind der Input der Lernmethode $\Gamma$. $\Gamma$ gibt die classification function $\gamma$ zur"uck.
+Die Trainingsdaten sind der Input der Lernmethode $\Gamma$. $\Gamma$ gibt die Entscheidungsregel $\gamma$ zur"uck.
 \[
 \Gamma(\mathbb{D}) = \gamma
 \]
 
-\section{Linear classifiers}
+\section{Dokumenterepr"asentation}
 \label{sec:linearclassifiers}
 
 \subsection{Vector space model}
 \label{sec:vectorspacemodel}
-Die Classification function $\gamma$ bestimmt f"ur ein gegebenes Dokument $d$ die Klasse $c$. Bei den folgenden Classifier muss das Dokument als Vektor re\-pr"as\-entiert werden. Der folgenden Abschnitt beschreibt die Repr"asentation eines Dokumentes als Vektor.
+Die Klassifizierungsfunktion $\gamma$ bestimmt f"ur ein gegebenes Dokument $d$ die Klasse $c$. Bei den folgenden Klassifizierer muss das Dokument als Vektor re\-pr"as\-entiert werden. Der folgenden Abschnitt beschreibt die Repr"asentation eines Dokumentes als Vektor.
 
-Um Dokumente mit den nachfolgenden Methoden zu klassifizieren, wird jedes Dokument als Vektor gespeichert. Jedem Wort von Interesse wird ein Wert zugeordnet. Eine einfache M"oglichkeit, w"are die Anzahl des Auftretens f"ur jedes Wort in dem Vektor abzuspeichern. Diese Repr"asentation ber"ucksichtig nicht, dass allgemeine W"orter wie z.B. "Auto", wenig "uber den Inhalt eines Dokumentes aussagen, aber trotzdem, oft vorkommen.
+\subsubsection{TF-IDF}
+\label{sec:tfidf}
+
+Um Dokumente mit den nachfolgenden Methoden zu klassifizieren, wird jedes Dokument als Vektor gespeichert. Jedem Wort von Interesse wird ein Wert zugeordnet. Eine einfache M"oglichkeit, w"are die Anzahl des Auftretens f"ur jedes Wort in dem Vektor abzuspeichern. Diese Repr"asentation ber"ucksichtig nicht, dass allgemeine W"orter wie z.B. Auto, wenig "uber den Inhalt eines Dokumentes aussagen, aber trotzdem, oft vorkommen.
 
 Um die Seltenheit eines Wortes zu bestimmen, wird die Anzahl der Dokumente, die das Wort enthalten bestimmt. Wenn $N$ die Anzahl aller Dokumente ist, kann mit der Formel
 
@@ -74,15 +77,17 @@ Die Werte $tf$ und $idf$ werden zu dem sogenannten $tf-idf$ Wert kombiniert. Die
 tf-idf_{t,d} = tf_{t,d} \times idf_t
 \]
 
-\begin{table}
-  \centering
-  \begin{tabular}{l l l l l l}
-    & Dok1 & Dok2 & Dok3 & idf & tf-idf Dok1 \\
-    Chip & 27 & 4 & 24 & 1.65 &44.5  \\
-  \end{tabular}
-  \caption{tf-idf Beispiel Werte }
-  \label{tab:temporal_operators}
-\end{table}
+% \begin{table}
+%   \centering
+%   \begin{tabular}{l l l l l l}
+%     & Dok1 & Dok2 & Dok3 & idf & tf-idf Dok1 \\
+%     Chip & 27 & 4 & 24 & 1.65 &44.5  \\
+%   \end{tabular}
+%   \caption{tf-idf Beispiel Werte }
+%   \label{tab:temporal_operators}
+% \end{table}
+
+\todo{Tabelle mit m"oglichen idf tf tf-idf werten einfuegen}
 
 Bei Text classication geht es darum, "ahnliche Dokumente zu finden. Jedem Wort in einem Dokument kann der $tf-idf$ - Wert zugewiesen werden, dass heisst jedes Dokument kann als Vektor, dessen Komponenten $tf-idf$ Werte sind repr"asentiert werden. Werden alle Dokumente, die klassifiert werden, als tf-idf-Vektoren mit einem gemeinsamen Vektorraum dargestellt, spricht man vom vector space model.
 
@@ -94,30 +99,6 @@ Wie in Abschnitt \ref{sec:vectorspacemodel} erk"art, k"onnen Dokumente als Vekto
 Wenn alle Dokumente als Punkte in der Ebene dargestellt werden, de\-finiert ein linearer Klassifizierer eine Linie in dieser Ebene. Ein Algorithmus, der neue Dokumente klassifiziert, muss entscheiden, ob die Vektor space Repr"a\-sentation des Dokuments auf welcher Seite liegt. Die Linie wird auch decision boundary genannt. Die Herausforderung der text classification liegt darin, gute decision boundaries zu finden.
 
 \todo{Bild von 2D Plane mit decision boundiary erstellen}
-
-\subsubsection{Rocchio classification}
-\label{sec:rocchio}
-
-Rocchio classifiation ist ein m"ogliches Verfahren um Dokumente zu klassifizieren. Die Grenzen zwischen den Klassen werden mit sogenannten centroids definiert. Ein centroid ist eine Vektor, dessen Komponente die Durchschnitts\-werte aller Vektoren der selben Klasse darstellen.
-\[
-\vec \mu(c) = \frac{1}{|D_c|} \sum_{d \in D} \vec v (d)
-\]
-$\vec (d)$ ist die Vektor space Repr"asentation. $D_c$ ist die Menge aller Dokumente der Klasse, dessen centroid berechnet werden soll.
-
-Neue Dokumente werden nach folgender Regel zugeordnet: Es wird die tdf-idf repr"asentation $\vec v (d)$ f"ur das neue Dokument $d$ berechnet. Dann wird $d$ derjenigen Klasse zugeordnet zu dessen centroid $\vec v (d)$ die geringste Distanz hat.
-
-\begin{algorithm}
-\caption{Rocchio Trainings-Algorithmus}
-\begin{algorithmic}
-
-\ForAll{ $c_i \in $ Klasses} 
-\State $ D_j \gets  \{d : (d,c_j) \in$ Classes $\}$
-\State  $\vec \mu_j \gets \frac{1}{|D_c|} \sum_{d \in D} \vec v (d)$
-\EndFor
-
-\Return ${\vec \mu_1, \dots , \vec \mu_n }$    
- \end{algorithmic}  
-\end{algorithm}
 
 \section{Logistische Regression}
 \label{sec:logisticreg}
@@ -170,7 +151,7 @@ Diese Funktion \ref{eq:costfunction} gibt f"ur $y==1$ grosse Werte zur"uck, wenn
 Diese Funktion kann ohne Unterscheidung, ob $y$ 1 oder 0 ist, wie folgt geschrieben werden. 
 
 \begin{equation}
-  \label{eq;simplecostfunction}
+  \label{eq:simplecostfunction}
   J( \theta ) = - \frac{1}{m} \sum_{i=1}^m y^{(i)} \log h_{\theta}(x^{(i)}) + (1 - y^{(i)}) \log(1 - h_{\theta}(x^{(i)}))
 \end{equation}
 
@@ -291,7 +272,7 @@ wird 0. Dass heisst es bleibt nur noch
 
 Man nennt SVM's auch Large Margin Classifier weil die decision boundary so
 
-Wie in Abschnitt \ref{vectorclassification} erkl"art, definiert ein Klassifizierer eine Hyperebene. Diese ist definiert durch den Achsenabschnitt $b$ und den Normalenvektor $ \vec w $. Alle Punkte $\vec x $ die auf dieser Hyperebene liegen, erf"ullen die Gleichung 
+Wie in Abschnitt \ref{sec:vectorclassification} erkl"art, definiert ein Klassifizierer eine Hyperebene. Diese ist definiert durch den Achsenabschnitt $b$ und den Normalenvektor $ \vec w $. Alle Punkte $\vec x $ die auf dieser Hyperebene liegen, erf"ullen die Gleichung 
 \[
 \vec w^T \vec x = -b
 \].
@@ -330,10 +311,82 @@ Das heisst die beiden Punkte, die der Decision Boundary am n"achsten sind, haben
 \end{aligned}
 \end{equation*}
 
+Das ist ein Optimierungsproblem mit Nebenbedingung. Es kann in eine Lagrangefunktion zusammengefasst werden \cite{cristianini}. Wenn man die Lagrangefunktion ensprechend umformt erh"alt man folgendes Optimierungsproblem. Die Funktion
+
+\begin{equation}
+  \label{eq:dualrep}
+W(\alpha) = \sum_{i=1}^n \alpha_i - \frac{1}{2} \sum_{i,j = 1}^n \alpha_i \alpha_j y_i y_j \vec{x_i^T} \vec{x_j}  
+\end{equation}
+
+soll unter der Bedingung
+ \[
+\alpha_i \geq 0
+\sum_{i=0}^n \alpha_i y_i = 0
+\]
+
+Die Umformung ist wichtig, weil in \ref{eq:dualrep} das Skalarprodukt von zwei Featurevektoren ausgerechnet wird. Das kann man ausnutzen.
+
+\subsection{Klassifizieren von nichtlinearen Daten}
+\label{sec:nonlinear}
+
+Die Decisionboundary, die man erh"alt, wenn man \ref{eq:dualrep} l"ost, ist eine Hyperebene. Im 2D Raum ist das eine Linie. Im 3D-Raum eine Ebene. Damit k"onnen nur linear separierbare Objekte klassifiziert werden. Es ist jedoch m"oglich die Daten der Objekte so zu transformieren, dass neue Dimensionen dazu kommen. Den neuen Vektorraum nennt man Feature Space. Ein zweidimensionaler Vektor kann zum Beispiel wie folgt transformiert werden.
+
+\begin{equation}
+  \label{eq:polynomial}
+\Phi: (x_1, x_2) \mapsto (x_1^2, \sqrt{2} x_1 x_2, x_2^2)
+\end{equation}
+
+Die Abbildung $\Phi$ f"ugt dem Input Space eine zus"atzliche Dimension hinzu. Im Feature sind die Daten unter Umst"anden linear trennbar und k"onnen deshalb mit jedem Algorithmus f"ur lineare Klassifikation klassifiziert werden. Dieser Ansatz funktioniert auch beim Algorithmus f"ur logistische Regression. Das Mapping vom Input space muss f"ur jedes Objekt durchgef"uhrt werden und skaliert dementsprechend schlecht. 
+
+Im Featurespace m"ussen Skalarprodukte der Form $\Phi(\vec{x_i})^T \Phi(\vec{x_j})$ ausgerechnet werden (siehe Gleichung \ref{eq:dualrep}). Dieses Skalarprodukt kann mit einer sogenannten Kernel-Funktion $\mathcal{K}$ ausrechnet werden. Der Wert von $\mathcal{K}$ ist im Inputspace gleich dem Skalarprodukt der beiden Operatoren im Featurespace.
+\begin{equation}
+  \label{eq:kerneltrick}
+  \mathcal{K}(x_i, x_j) = \Phi(x_i)^T \Phi(x_j)
+\end{equation}
+
+Es kann gezeigt werden, dass nach Umformen des Skalarprodukt der Featurevektoren, die mit $\Phi$ berechnet wurden, gleich dem Wert von $\mathcal{K}$ ist im urspr"unglichen Inputspace ist.
+
+\begin{eqnarray}{lcl}
+  \label{eq:transformkernel}
+  \Phi((x_1, x_2)) \cdot \Phi((y_1, y_2)) & = & (x_1^2, \sqrt{2} x_1 x_2, x_2^2)(y_1^2, \sqrt{2} y_1 y_2, y_2^2)\\
+& = & x_1^2 y_1^2 + 2 x_1 x_2 y_1 y_2 + x_2^2 y_2^2 \\
+& = & (x_1 y_1 + x_2 y_2)^2 \\
+& = & \vec{x}^T \vec{y} \\
+& = & \mathcal{K}
+\end{eqnarray}
+
+Es ist also gar nicht n"otig die Funktion $\Phi$ anzuwenden. Wenn das Skalarprodukt eine Kernelfunktion ist m"ussen wir die $\vec{w}$ nicht in einem hochdimensionalen Raum berechnen. Das spart viel Rechen und Speicheraufwand. Man nennt diese Abk"urzung den Kerneltrick. Weil SVM's das Skalarprodukt in der Gleichung \ref{eq:dualrep} enthalten, kann der Kernel Trick bei SVM angewendet werden. Das verringert die Laufzeit.
+
 \appendix
 
 \section{Octave Demo: Logistische Regression}
 \label{sec:code}
+
+
+\section{Rocchio classification}
+\label{sec:rocchio}
+
+Rocchio classifiation ist ein m"ogliches Verfahren um Dokumente zu klassifizieren. Die Grenzen zwischen den Klassen werden mit sogenannten centroids definiert. Ein centroid ist eine Vektor, dessen Komponente die Durchschnitts\-werte aller Vektoren der selben Klasse darstellen.
+\[
+\vec \mu(c) = \frac{1}{|D_c|} \sum_{d \in D} \vec v (d)
+\]
+$\vec (d)$ ist die Vektor space Repr"asentation. $D_c$ ist die Menge aller Dokumente der Klasse, dessen centroid berechnet werden soll.
+
+Neue Dokumente werden nach folgender Regel zugeordnet: Es wird die tdf-idf repr"asentation $\vec v (d)$ f"ur das neue Dokument $d$ berechnet. Dann wird $d$ derjenigen Klasse zugeordnet zu dessen centroid $\vec v (d)$ die geringste Distanz hat.
+
+\begin{algorithm}
+\caption{Rocchio Trainings-Algorithmus}
+\begin{algorithmic}
+
+\ForAll{ $c_i \in $ Klasses} 
+\State $ D_j \gets  \{d : (d,c_j) \in$ Classes $\}$
+\State  $\vec \mu_j \gets \frac{1}{|D_c|} \sum_{d \in D} \vec v (d)$
+\EndFor
+
+\Return ${\vec \mu_1, \dots , \vec \mu_n }$    
+ \end{algorithmic}  
+\end{algorithm}
+
 
 \lstinputlisting[label={lst:logisticregression},caption={Octave Skript f"ur logistische Regression},numbers=left]{logisticregression.m}
 
@@ -349,6 +402,13 @@ Gerald Teschl Susanne Teschl,
 Mathematik f"ur Informatiker: Analysis und Statistik,
 Springer,
 2007
+
+\bibitem{cristianini}
+Nello Cristianini,
+An Introduction to Support Vector Machines an other kernel-based learning methods
+Cambridge University Press,
+2000
+
 \end{thebibliography}
 
 
