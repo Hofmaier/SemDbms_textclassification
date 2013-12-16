@@ -26,7 +26,7 @@ captionpos=b
 
 Dieser Abschnitt gibt erkl"art, worum es bei Text Classication geht.
 
-Es gibt folgende Ansatze um eine Menge von Dokumenten in Klassen zu unterteilen:
+Es gibt folgende Ans"atze, um eine Menge von Dokumenten in Klassen zu unterteilen:
 \begin{description}
 \item[Manuelle Klassifizierung] Eine Person ordnet Text manuell einem bestimmten Thema zu. Dieser Ansatz skaliert nicht.
 \item[Standing queries] Es werden f"ur jedes Thema eigene Queries geschrieben, die in einer Menge von Dokumenten die richtigen finden. Dieser Ansatz funktioniert sehr gut. Die Regeln m"ussen f"ur jedes Thema einzeln angefertigt werden. Gute Regeln erfodern, dass der Autor der Regel sich mit Queries und der Domain auskennt.
@@ -34,7 +34,7 @@ Es gibt folgende Ansatze um eine Menge von Dokumenten in Klassen zu unterteilen:
 \end{description}
 
 
-Bei Text Classification geht es darum, Dokumente vordefinierten Klassen zuzuordnen. Man m"ochte eine Menge von Dokumenten in Klassen unterteilen. Sucht man nur nach Dokumenten einer bestimmten Klasse, muss man nicht jedes Dokument manuell "uberpr"ufen, ob es relevant ist. Klassen k"onnen z.B. Themen sein. Man k"onnte die Dokumente zu einem Thema suchen, indem man einen boolschen Ausdruck definiert, der ausdr"uckt welche W"orter in einem Dokument enthalten sein m"ussen. Dieser Ansatz hat den Nachteil, dass es schwierig ist, geeignete boolsche Ausdr"ucke zu formulieren, die zu guten Resultaten f"uhren.
+Bei Text Classification geht es darum, Dokumente vordefinierten Klassen zuzuordnen. Man m"ochte eine Menge von Dokumenten in Klassen unterteilen. Das heisst man weist jedem Dokument ein Label zu. Sucht man nur nach Dokumenten einer bestimmten Klasse, muss man nicht jedes Dokument manuell "uberpr"ufen, ob es relevant ist. Labels k"onnen z.B. Themen sein. Man k"onnte die Dokumente zu einem Thema suchen, indem man einen boolschen Ausdruck definiert, der ausdr"uckt welche W"orter in einem Dokument enthalten sein m"ussen. Dieser Ansatz hat den Nachteil, dass es schwierig ist, geeignete boolsche Ausdr"ucke zu formulieren, die zu guten Resultaten f"uhren.
 
 Eine anderer Ansatz ist machine learning-based Text Classification. Bei diesem Ansatz wird die Regel nach, der man Dokumente, den Klassen zuteilt, aus sogenannten Trainings Daten, berechnet. Die Trainingsdaten (training set $\mathbb{D}$ ) bestehen aus einer Menge von Dokumenten, denen bereits die richtige Klasse zugeordnet wurde. Diese Zuordnung kann z.B. manuell passieren. Dieser Ansatz wird auch supervised learning oder "uberwachtes Lernen genannt. 
 
@@ -43,7 +43,7 @@ Die generierte Regel, wird auch Klassifizierer oder Entscheidungsfunktion $\gamm
 \gamma : \mathbb{X} \to \mathbb{C}
 \]
 
-$\mathbb{X}$ ist der Document space und $\mathbb{C}$ ist die Menge aller Klassen. Der Klassifizierer nimmt ein Dokument als Input und gibt die passende Klasse zur"uck. F"ur Dokumente gibt es unterschiedliche Repr"asentationen. Eine m"ogliche Repr"asentation wird in Abschnitt \ref{sec:vectorspacemodel} erkl"art.
+$\mathbb{X}$ ist ein Vektorraum in dem alle Dokumente repr"asentiert werden k"onnen und $\mathbb{C}$ ist die Menge aller Klassen. Der Klassifizierer nimmt ein Dokument als Input und gibt die passende Klasse zur"uck. F"ur Dokumente gibt es unterschiedliche Repr"asentationen. Eine m"ogliche Repr"asentation wird in Abschnitt \ref{sec:vectorspacemodel} erkl"art.
 
 Die Trainingsdaten sind der Input der Lernmethode $\Gamma$. $\Gamma$ gibt die Entscheidungsregel $\gamma$ zur"uck.
 \[
@@ -55,14 +55,14 @@ Die Trainingsdaten sind der Input der Lernmethode $\Gamma$. $\Gamma$ gibt die En
 
 \subsection{Vector space model}
 \label{sec:vectorspacemodel}
-Die Klassifizierungsfunktion $\gamma$ bestimmt f"ur ein gegebenes Dokument $d$ die Klasse $c$. Bei den folgenden Klassifizierer muss das Dokument als Vektor re\-pr"as\-entiert werden. Der folgenden Abschnitt beschreibt die Repr"asentation eines Dokumentes als Vektor.
+Die Klassifizierungsfunktion $\gamma$ bestimmt f"ur ein gegebenes Dokument $d$ die Klasse $c$. Bei den folgenden Klassifizierer muss das Dokument als Vektor re\-pr"as\-entiert werden. Ein Vektor der ein Objekt repr"asentiert, nennt man Featurevektor. Die Elemente sind die Features. Der folgenden Abschnitt beschreibt die Repr"asentation eines Dokumentes als Vektor.
 
 \subsubsection{TF-IDF}
 \label{sec:tfidf}
 
 Um Dokumente mit den nachfolgenden Methoden zu klassifizieren, wird jedes Dokument als Vektor gespeichert. Jedem Wort von Interesse wird ein Wert zugeordnet. Eine einfache M"oglichkeit, w"are die Anzahl des Auftretens f"ur jedes Wort in dem Vektor abzuspeichern. Diese Repr"asentation ber"ucksichtig nicht, dass allgemeine W"orter wie z.B. Auto, wenig "uber den Inhalt eines Dokumentes aussagen, aber trotzdem, oft vorkommen.
 
-Um die Seltenheit eines Wortes zu bestimmen, wird die Anzahl der Dokumente, die das Wort enthalten bestimmt. Wenn $N$ die Anzahl aller Dokumente ist, kann mit der Formel
+Um die Seltenheit eines Wortes zu bestimmen, wird die Anzahl der Dokumente $df_f$ , die das Wort $t$ enthalten bestimmt. Wenn $N$ die Anzahl aller Dokumente ist, kann mit der Formel
 
 \[
 idf_t = log \frac{ N}{df_f}
@@ -77,28 +77,14 @@ Die Werte $tf$ und $idf$ werden zu dem sogenannten $tf-idf$ Wert kombiniert. Die
 tf-idf_{t,d} = tf_{t,d} \times idf_t
 \]
 
-% \begin{table}
-%   \centering
-%   \begin{tabular}{l l l l l l}
-%     & Dok1 & Dok2 & Dok3 & idf & tf-idf Dok1 \\
-%     Chip & 27 & 4 & 24 & 1.65 &44.5  \\
-%   \end{tabular}
-%   \caption{tf-idf Beispiel Werte }
-%   \label{tab:temporal_operators}
-% \end{table}
-
-\todo{Tabelle mit m"oglichen idf tf tf-idf werten einfuegen}
-
 Bei Text classication geht es darum, "ahnliche Dokumente zu finden. Jedem Wort in einem Dokument kann der $tf-idf$ - Wert zugewiesen werden, dass heisst jedes Dokument kann als Vektor, dessen Komponenten $tf-idf$ Werte sind repr"asentiert werden. Werden alle Dokumente, die klassifiert werden, als tf-idf-Vektoren mit einem gemeinsamen Vektorraum dargestellt, spricht man vom vector space model.
 
 \subsection{Vector space classification}
 \label{sec:vectorclassification}
 
-Wie in Abschnitt \ref{sec:vectorspacemodel} erk"art, k"onnen Dokumente als Vektoren dargestellt werden. Um die Funktionsweise der nachfolgenden Methoden zu erkl"aren, haben diese Vektoren zwei Komponente. Wenn es dabei um Vektoren mit zwei Komponenten handelt, k"onnen diese als Punkte in der Ebene dargestellt werden. In der Realit"at arbeitet man mit Vektoren die Punkte in einer Hyperebene darstellen.
+Wie in Abschnitt \ref{sec:vectorspacemodel} erk"art, k"onnen Dokumente als Vektoren dargestellt werden. Um die Funktionsweise der nachfolgenden Methoden zu erkl"aren, haben diese Vektoren zwei Komponente. Wenn es sich dabei um Vektoren mit zwei Komponenten handelt, k"onnen diese als Punkte in der Ebene dargestellt werden. In der Realit"at arbeitet man mit Vektoren, die Punkte in einer Hyperebene darstellen.
 
-Wenn alle Dokumente als Punkte in der Ebene dargestellt werden, de\-finiert ein linearer Klassifizierer eine Linie in dieser Ebene. Ein Algorithmus, der neue Dokumente klassifiziert, muss entscheiden, ob die Vektor space Repr"a\-sentation des Dokuments auf welcher Seite liegt. Die Linie wird auch decision boundary genannt. Die Herausforderung der text classification liegt darin, gute decision boundaries zu finden.
-
-\todo{Bild von 2D Plane mit decision boundiary erstellen}
+Wenn alle Dokumente als Punkte in der Ebene dargestellt werden, de\-finiert ein linearer Klassifizierer eine Linie in dieser Ebene. Ein Algorithmus, der neue Dokumente klassifiziert, muss entscheiden, auf welcher die Vektorspace-Repr"a\-sentation des Dokuments liegt. Die Linie wird auch Decision Boundary genannt. Die Herausforderung der Text Classification liegt darin, gute Decision Boundaries zu finden.
 
 \section{Logistische Regression}
 \label{sec:logisticreg}
@@ -111,7 +97,7 @@ g(z) = \frac{1}{1 + e^{-z}}
 
 
 \begin{figure}
-  \includegraphics[scale=0.3]{sigmoid}
+  \includegraphics[scale=0.5]{sigmoid}
   \centering
   \label{fig:sigmoidfunc}
   \caption{Plot der Sigmoidfunktion}
@@ -119,13 +105,13 @@ g(z) = \frac{1}{1 + e^{-z}}
 
 Der Wertebereich der Sigmoidfunktion liegt zwischen 0 und 1. Bei einer Eingabe von 0 gibt die Funktion 0.5 zur"uck.
 
-Der Klassifizierer berechnet das Skalarprodukt des Featurevektor $x$ und einem Paramatervektor $\Theta$ Theta aus.
+Der Klassifizierer berechnet das Skalarprodukt des Featurevektor $x$ und einem Paramatervektor $\theta$ Theta aus.
 
 \[
-z = \Theta^T x
+z = \theta^T x
 \]
 
-Dieser Wert dient als Input f"ur die Sigmoidfunktion. Ist der Wert gr"osser 0.5, das heisst das Skalarprodukt ist gr"osser 0, wird das Objekt der Klasse mit dem Label 1 zugewiesen. Ist der Wert kleiner 0.5 wird das Objekt der Klasse mit Label 0 zugewiesen. Die Aufgabe des Klassifizierungalgorithmus ist es, die Werte des Parametervektors zu bestimmen, so dass m"oglichst viele Objekte in den Trainingsdaten richtig klassifiziert werden. 
+Dieser Wert dient als Input f"ur die Sigmoidfunktion. Ist der Wert gr"osser 0.5, das heisst das Skalarprodukt ist gr"osser 0, wird das Objekt der Klasse mit dem Label 1 zugewiesen. Ist der Wert kleiner 0.5 wird das Objekt der Klasse mit Label 0 zugewiesen. Die Aufgabe des Trainingsalgorithmus ist es, die Werte des Parametervektors zu bestimmen, so dass m"oglichst viele Objekte in den Trainingsdaten richtig klassifiziert werden. 
 
 \subsection{Kostenfunktion}
 \label{sec:costfunction}
@@ -141,14 +127,14 @@ Der Klassifizierer soll denjenigen Paramtervektor $\Theta$ finden, der die Objek
     \end{array} \right.
 \end{equation}
 
-Diese Funktion \ref{eq:costfunction} gibt f"ur $y==1$ grosse Werte zur"uck, wenn $h_{\theta}$ nahe bei $0$ liegt und sie gibt genau $0$ zur"uck, wenn $h_{\theta}$ $1$ ist. Das heisst, wenn $h_{\theta}$ und $y$ "ubereinstimmen ist der Wert klein, sonst gross. Bei $y==0$ ist es genau umgekehrt. Und der Klassifiziereralgorithmus soll $\theta$ so w"ahlen, dass $h_{\theta}$ und $y$  f"ur alle Trainingsbeispiele m"oglichst "ubereinstimmen. Die Funktion \ref{eq:costfunction} soll also minimiert werden.
+Funktion \ref{eq:costfunction} gibt f"ur $y==1$ grosse Werte zur"uck, wenn $h_{\theta}$ nahe bei $0$ liegt und sie gibt genau $0$ zur"uck, wenn $h_{\theta}$ $1$ ist. Das heisst, wenn $h_{\theta}$ und $y$ "ubereinstimmen ist der Wert klein, sonst gross. Bei $y==0$ ist es genau umgekehrt. Und der Klassifiziereralgorithmus soll $\theta$ so w"ahlen, dass $h_{\theta}$ und $y$  f"ur alle Trainingsbeispiele m"oglichst "ubereinstimmen. Funktion \ref{eq:costfunction} soll also minimiert werden.
 
 \begin{equation}
   \label{eq:minimize}
-  \underset{\theta}{\text{min}} J(\theta)
+  \underset{\theta}{\text{min }} J(\theta)
 \end{equation}
 
-Diese Funktion kann ohne Unterscheidung, ob $y$ 1 oder 0 ist, wie folgt geschrieben werden. 
+Funktion \ref{eq:costfunction} kann ohne Unterscheidung, ob $y$ 1 oder 0 ist, wie folgt geschrieben werden. 
 
 \begin{equation}
   \label{eq:simplecostfunction}
@@ -157,7 +143,7 @@ Diese Funktion kann ohne Unterscheidung, ob $y$ 1 oder 0 ist, wie folgt geschrie
 
 Die Kostenfunktion z"ahlt die Abweichungen vom Sollwert aller $m$ Trainingsbeispiele zusammen. $x^{(i)}$ und $y^{(i)}$ bezeichnen ein Objekt aus der Trainingsmenge.
 
-Die Funktion $J(\theta)$ gibt kleine Werte zur"uck, wenn $\theta x$ Werte sind, die weiter entfernt von 0 sind. Das heisst, je weiter weg die Objekte der Trainingsmenge von der descision boundary. Der Klassifizierer soll eine Descision Boundary finden, die von allen Punkten den gr"ostm"oglichen Abstand hat. Die Funktion $J(\theta)$ soll also minimiert werden. Dies kann beispielsweise mit dem Gradientenabstieg gemacht 
+Die Funktion $J(\theta)$ gibt kleine Werte zur"uck, wenn $\theta x$ Werte sind, die weiter entfernt von 0 sind. Das heisst, je weiter weg die Objekte der Trainingsmenge von der descision boundary. Der Klassifizierer soll eine Descision Boundary finden, die von allen Punkten den gr"ostm"oglichen Abstand hat. Die Funktion $J(\theta)$ soll also minimiert werden. Dies kann beispielsweise mit dem Gradientenabstieg gemacht werden. 
 
 \subsection{Gradientenverfahren}
 \label{sec:gradientdescent}
@@ -195,17 +181,17 @@ $\theta_j := \theta_j - \alpha \frac{\partial}{\partial \theta_j} J(\theta) = \f
  \end{algorithmic}  
 \end{algorithm}
 
-Das Gradientenverfahren liefert den Vektor $theta$ der ein Minimum der Kostenfunktion findet. Mit diesem $\theta$ k"onnen neue Instanzen nach der folgenden Regel klassifiziert werden.
+Das Gradientenverfahren liefert den Vektor $\theta$. Dieser Vektor minimiert die Kostenfunktion \ref{eq:costfunction}. Mit diesem $\theta$ k"onnen neue Instanzen nach der folgenden Regel klassifiziert werden.
+\begin{itemize}
+\item Wenn $\theta^T x \geq 0$ dann $y=1$
+\item Wenn $\theta^T x < 0$ dann $y=0$
+\end{itemize}
 
-Wenn $\theta^T x \geq 0$ dann $y=1$
-
-Wenn $\theta^T x < 0$ dann $y=0$
-
-Das Listing \ref{lst:logisticregression} zeigt eine Implementation in Octave des Verfahrens.
+Listing \ref{lst:logisticregression} zeigt eine Implementation in Octave des Verfahrens.
 
 \subsection{Implementation}
 \label{sec:implementation}
-Die Trainingsbeispiele werden in eine Matrix geladen. In dieser Matrix entspricht jede Zeile einem Objekt. Die korrekte Klassifizierung wird in einen Vektor y geladen. Die Elemente von y sind 1 oder 0. In der Variablen \verb|m| wird die Anzahl der Beispiele gespeichert. In der Beispielimplementation werden die Objekte mit zwei reelen Zahlen beschrieben. Dass heisst die Matrix \verb|X| hat die Dimension $m \times 2$. Um die Hypthesenfunktion einfach auf alle Beispiele anzuwenden, wird der Matrix \verb|X| eine Kolonne mit 1en hinzugef"ugt. Dadurch kann man mit der Matrix-Vektor Multiplikation von allen Beispielen den Wert der Hypthesenfunktion ausrechnen.
+Die Trainingsbeispiele werden in eine Matrix \verb|X| geladen. In dieser Matrix entspricht jede Zeile einem Objekt. Die korrekte Klassifizierung wird in einen Vektor y geladen. Die Elemente von y sind 1 oder 0. In der Variablen \verb|m| wird die Anzahl der Beispiele gespeichert. In der Beispielimplementation werden die Objekte mit zwei reelen Zahlen beschrieben. Dass heisst die Matrix \verb|X| hat die Dimension $m \times 2$. Um die Hypthesenfunktion einfach auf alle Beispiele anzuwenden, wird der Matrix \verb|X| eine Kolonne mit 1en hinzugef"ugt. Dadurch kann man mit der Matrix-Vektor Multiplikation von allen Beispielen den Wert der Hypthesenfunktion $h_{\theta}$ ausrechnen.
 
 \begin{lstlisting}
 h_theta = sigmoid(X * theta);
@@ -242,7 +228,8 @@ berechnet.
 \subsection{Regularisation}
 \label{sec:regularization}
 
-Um Overfitting zu vermeiden, begrenzt man die Werte in $\theta$. Dies wird dadruch erreicht, dass man der Kostenfunktion den Term $\frac{\lambda}{2m} \sum_{j=1}^n \theta^2$ hinzuf"ugt. Es wird also foglende Funktion minimiert.
+Um Overfitting zu vermeiden, begrenzt man die Werte in $\theta$. Dies wird dadurch erreicht, dass man der Kostenfunktion den Term $\frac{\lambda}{2m} \sum_{j=1}^n \theta^2$ hinzuf"ugt. Es wird also foglende Funktion minimiert.
+
 \begin{equation}
   \label{eq:regularization}
   \underset{\theta}{\text{min}}  J(\theta) = -\frac{1}{m} \sum_{i=1}^m y^{(i)} \log h_{\theta}(x^{(i)}) + (1 - y^{(i)}) \log(1 - h_{\theta}(x^{(i)}))+\frac{\lambda}{2m} \sum_{j=1}^n \theta^2
@@ -251,26 +238,28 @@ Um Overfitting zu vermeiden, begrenzt man die Werte in $\theta$. Dies wird dadru
 \section{Support vector machines}
 \label{sec:svm}
 
-Dieser Abschnitt beschreibt einen weiteren Klassifikationsalgorithmus. Es geht um Support Vector Machines (SVM's). Dieser Algorithmus ist in der Industrie sehr verbreitet.
+Dieser Abschnitt beschreibt ein weiteres Trainingsverfahren. Es geht um Support Vector Machines (SVM's). SVM's sind in der Industrie sehr verbreitet.
 
 Bei logistischer Regression soll sich die Hypothesenfunktion $h_{\theta}$ wie folgt verhalten.
 Wenn $y == 1$, dann soll $h_{\theta} \approx 1$, Dass heisst $\theta^T x \gg 0$. Und wenn $y == 0$, dann $h_{\theta} \approx 0$. Bei SVM wird gefordert, dass $\theta^T x \geq 1$ f"ur $y == 1$ und $\theta^T x \leq -1$ f"ur $y == 0$.
 
-Wenn $\theta$ diese Beschr"ankung einh"alt, tr"agen die Objekte in der Trainimgsmenge nichts zu Kostenfunktion bei.
+Wenn $\theta$ diese Anforderung einh"alt, tragen die Objekte in der Trainimgsmenge nichts zu Kostenfunktion bei.
 
-Der erste Teil der Optimierungsproblems der logistischen Regression
+Der erste Teil der Kostenfunktion 
 \begin{equation}
   \label{eq:costsvm}
-\underset{\theta}{\text{min}}   = y^{(i)} cost_1(h_{\theta}(x^{(i)})) + (1 - y^{(i)})(cost_2(h_{\theta}(x^{(i)}))) 
+J(\theta) = y^{(i)} cost_1(h_{\theta}(x^{(i)})) + (1 - y^{(i)})(cost_2(h_{\theta}(x^{(i)}))) + \frac{\lambda}{2m} \sum_{j=1}^n \theta^2
 \end{equation}
 wird 0. Dass heisst es bleibt nur noch
 
 \begin{equation}
   \label{eq:opt}
-  \underset{\theta}{\text{min}}  J(\theta) = \frac{\lambda}{2m} \sum_{j=1}^n \theta^2
+    J(\theta) = \frac{\lambda}{2m} \sum_{j=1}^n \theta^2
 \end{equation}
 
-Man nennt SVM's auch Large Margin Classifier weil die decision boundary so
+Aus Bequemlichkeitsgr"unden wird $\lambda$ durch einen Faktor $\frac{1}{C}$ ersetzt. Wenn man Overfitting reduzieren m"ochte, wird $C$ verkleiner und vergr"ossert, wenn man Underfitting vermeiden m"ochte.
+
+Man nennt SVM's auch Large Margin Classifier weil die Decision Boundary so durch die Traningsmenge gelegt wird, dass der Abstand zu den nahesten Punkten maximiert wird.
 
 Wie in Abschnitt \ref{sec:vectorclassification} erkl"art, definiert ein Klassifizierer eine Hyperebene. Diese ist definiert durch den Achsenabschnitt $b$ und den Normalenvektor $ \vec w $. Alle Punkte $\vec x $ die auf dieser Hyperebene liegen, erf"ullen die Gleichung 
 \[
@@ -283,14 +272,14 @@ f(\vec x ) = sign( \vec w^T \vec x + b)
 \]
 wird ausgewertet. Je nachdem, ob der Wert $1$ oder $-1$ ist wird das Dokument einer Klasse zugeordnet.
 
-Support Vectors (St"utzvektoren) sind die Objekte die am nahesten bei der Decision Boundary sind. SVM's finden eine Hyperebene, die die Datenmenge so trennt, dass die St"utzvektoren m"oglichst weit entfernt von der Decision Boundary sind. Der Abstand von Punkten die der Decision Boundary am n"achsten sind, soll also  maximiert werden. Man sagt dazu, dass die Daten mit maximaler Trennspanne getrennt werden $\vec w$ muss folgende Forderung erf"ullen.
+Support Vectors (St"utzvektoren) sind die Objekte die am nahesten bei der Decision Boundary sind. SVM's finden eine Hyperebene, die die Datenmenge so trennt, dass die St"utzvektoren m"oglichst weit entfernt von der Decision Boundary sind. Der Abstand von Punkten die der Decision Boundary am n"achsten sind, soll also  maximiert werden. Man sagt dazu, dass die Daten mit maximaler Trennspanne getrennt werden $\vec. w$ muss folgende Forderung erf"ullen.
 
 \[
-\vec w^T \vec x_i + b \geq 1 \text{f"ur} y_i = 1
+\vec w^T \vec x_i + b \geq 1 \text{ f"ur } y_i = 1
 \]
 
 \[
-\vec w^T \vec x_i + b \leq 1 \text{f"ur} y_i = 0
+\vec w^T \vec x_i + b \leq 1 \text{ f"ur } y_i = 0
 \]
 
 Der Abstand von einem Punkt zur Hyperebene l"asst sich berechnen durch
@@ -299,13 +288,14 @@ Der Abstand von einem Punkt zur Hyperebene l"asst sich berechnen durch
 \frac{\vec w}{||w||} \vec x_i + \frac{b}{||w||}
 \]
 
-Das heisst die beiden Punkte, die der Decision Boundary am n"achsten sind, haben jeweils den Abstand $\frac{1}{||w||}$. Die gesamte Trennspanne ist also $\frac{1}{||w||}$. Die Trennspanne soll maximiert werden. Das heisst $||w||$ soll minimiert werden. Um die beste Decision Boundary zu finden m"ussen wir folgendes Optimierungsproblem l"osen.
+Das heisst die beiden Punkte, die der Decision Boundary am n"achsten sind, haben jeweils den Abstand $\frac{1}{||w||}$. Die gesamte Trennspanne ist also $\frac{2}{||w||}$. Die Trennspanne soll maximiert werden. Das heisst $||w||$ soll minimiert werden. Um die beste Decision Boundary zu finden m"ussen wir folgendes Optimierungsproblem l"osen.
 
  \begin{equation*}
+   \label{eq:qp}
 \begin{aligned}
-& \underset{x}{\text{minimiere}}
+& \underset{w}{\text{minimiere}}
 & & \lVert \vec w \rVert^2 \\
-& \text{subject to}\\
+& \text{so dass}\\
 & & \vec{w}^T \vec{x_i} + b \geq 1, \; y_i = 1 \\
 & & \vec{w}^T \vec{x_i} + b \leq -1, \;  y_i = 0
 \end{aligned}
@@ -323,56 +313,120 @@ soll unter der Bedingung
 \alpha_i \geq 0
 \sum_{i=0}^n \alpha_i y_i = 0
 \]
+optimiert werden.
 
-Die Umformung ist wichtig, weil in \ref{eq:dualrep} das Skalarprodukt von zwei Featurevektoren ausgerechnet wird. Das kann man ausnutzen.
+
+Die Umformung ist wichtig, weil in \ref{eq:dualrep} das Skalarprodukt von zwei Featurevektoren ausgerechnet wird. Das kann man ausnutzen. In Abschnitt \ref{sec:nonlinear} wird gezeigt, dass das Skalarprodukt n"otig ist, um den Kerneltrick anzuwenden.
 
 \subsection{Klassifizieren von nichtlinearen Daten}
 \label{sec:nonlinear}
 
-Die Decisionboundary, die man erh"alt, wenn man \ref{eq:dualrep} l"ost, ist eine Hyperebene. Im 2D Raum ist das eine Linie. Im 3D-Raum eine Ebene. Damit k"onnen nur linear separierbare Objekte klassifiziert werden. Es ist jedoch m"oglich die Daten der Objekte so zu transformieren, dass neue Dimensionen dazu kommen. Den neuen Vektorraum nennt man Feature Space. Ein zweidimensionaler Vektor kann zum Beispiel wie folgt transformiert werden.
+Die Decision Boundary, die man erh"alt, wenn man das Optimierungsproblem \ref{eq:dualrep} l"ost, ist eine Hyperebene. Im 2D Raum ist das eine Linie. Im 3D-Raum eine Ebene. Damit k"onnen nur linear separierbare Objekte klassifiziert werden. Es ist jedoch m"oglich die Daten der Objekte so zu transformieren, dass neue Dimensionen dazu kommen. Das nennt man Featuremapping. Den neuen Vektorraum nennt man Feature Space. Ein zweidimensionaler Vektor kann zum Beispiel wie folgt in einen dreidimensionalen transformiert werden.
 
 \begin{equation}
   \label{eq:polynomial}
 \Phi: (x_1, x_2) \mapsto (x_1^2, \sqrt{2} x_1 x_2, x_2^2)
 \end{equation}
 
-Die Abbildung $\Phi$ f"ugt dem Input Space eine zus"atzliche Dimension hinzu. Im Feature sind die Daten unter Umst"anden linear trennbar und k"onnen deshalb mit jedem Algorithmus f"ur lineare Klassifikation klassifiziert werden. Dieser Ansatz funktioniert auch beim Algorithmus f"ur logistische Regression. Das Mapping vom Input space muss f"ur jedes Objekt durchgef"uhrt werden und skaliert dementsprechend schlecht. 
+Die Abbildung $\Phi$ f"ugt dem Input Space eine zus"atzliche Dimension hinzu. Im Feature Space sind die Daten unter Umst"anden linear trennbar und k"onnen deshalb mit jedem Algorithmus f"ur lineare Klassifikation klassifiziert werden. Dieser Ansatz funktioniert auch beim Algorithmus f"ur logistische Regression. Das Mapping vom Input Space in den Feature Space muss f"ur jedes Objekt durchgef"uhrt werden und skaliert dementsprechend schlecht. 
 
-Im Featurespace m"ussen Skalarprodukte der Form $\Phi(\vec{x_i})^T \Phi(\vec{x_j})$ ausgerechnet werden (siehe Gleichung \ref{eq:dualrep}). Dieses Skalarprodukt kann mit einer sogenannten Kernel-Funktion $\mathcal{K}$ ausrechnet werden. Der Wert von $\mathcal{K}$ ist im Inputspace gleich dem Skalarprodukt der beiden Operatoren im Featurespace.
+Im Featurespace m"ussen Skalarprodukte der Form $\Phi(\vec{x_i})^T \Phi(\vec{x_j})$ ausgerechnet werden (siehe Gleichung \ref{eq:dualrep}). Dieses Skalarprodukt kann mit einer sogenannten Kernel-Funktion $\mathcal{K}$ ausrechnet werden. Der Wert von $\mathcal{K}$ ist im Input Space gleich dem Skalarprodukt der beiden Operatoren im Featurespace.
 \begin{equation}
   \label{eq:kerneltrick}
   \mathcal{K}(x_i, x_j) = \Phi(x_i)^T \Phi(x_j)
 \end{equation}
 
-Es kann gezeigt werden, dass nach Umformen des Skalarprodukt der Featurevektoren, die mit $\Phi$ berechnet wurden, gleich dem Wert von $\mathcal{K}$ ist im urspr"unglichen Inputspace ist.
+Es kann gezeigt werden, dass nach Umformen das Skalarproduktes der Featurevektoren, die mit $\Phi$ berechnet wurden, gleich dem Wert von $\mathcal{K}$ im urspr"unglichen Input Space ist.
 
-\begin{eqnarray}{lcl}
+\begin{eqnarray}
   \label{eq:transformkernel}
   \Phi((x_1, x_2)) \cdot \Phi((y_1, y_2)) & = & (x_1^2, \sqrt{2} x_1 x_2, x_2^2)(y_1^2, \sqrt{2} y_1 y_2, y_2^2)\\
 & = & x_1^2 y_1^2 + 2 x_1 x_2 y_1 y_2 + x_2^2 y_2^2 \\
 & = & (x_1 y_1 + x_2 y_2)^2 \\
-& = & \vec{x}^T \vec{y} \\
-& = & \mathcal{K}
+& = & (\vec{x}^T \vec{y})^2 \\
+& = & \mathcal{K}((x_1,x_2),(y_1,y_2))
 \end{eqnarray}
 
-Es ist also gar nicht n"otig die Funktion $\Phi$ anzuwenden. Wenn das Skalarprodukt eine Kernelfunktion ist m"ussen wir die $\vec{w}$ nicht in einem hochdimensionalen Raum berechnen. Das spart viel Rechen und Speicheraufwand. Man nennt diese Abk"urzung den Kerneltrick. Weil SVM's das Skalarprodukt in der Gleichung \ref{eq:dualrep} enthalten, kann der Kernel Trick bei SVM angewendet werden. Das verringert die Laufzeit.
+Es ist also gar nicht n"otig die Funktion $\Phi$ anzuwenden. Wenn das Skalarprodukt eine Kernelfunktion ist, m"ussen wir $\vec{w}$ nicht in einem hochdimensionalen Raum berechnen. Das spart viel Rechen- und Speicheraufwand. Man nennt diese Abk"urzung den Kerneltrick. Weil SVM's das Skalarprodukt in der Gleichung \ref{eq:dualrep} enthalten, kann der Kernel Trick bei SVM angewendet werden. Das verringert die Laufzeit.
+
+Ein oft verwendeter Kernel ist der Gaussian Kernel. Diese Funktion berechnet zu jedem Objekt in der Traningsmenge wie "ahnlich es zu den anderen Objekten ist. Die Funktion lautet
+
+\begin{equation}
+  \label{eq:gauss}
+  f_i = exp(-\frac{\sum_{j=0}^n(x_j - l_j^{(i)})^2}{2 \sigma^2})
+\end{equation}
+
+$\sigma^2$ ist ein Paramter, den man selbst w"ahlen muss. Er regelt den Abfall der Gaussglocke.
+
+\subsection{Parameter der SVM}
+\label{sec:parameters}
+
+Wenn man Texte mit einer SVM klassifizieren m"ochte, ist es nicht n"otig, dass man eine SVM implementiert. Es gibt einige ausgereifte Implementationen. Eine m"ogliche Implementation ist libsvm. Es ist jedoch eine Herausforderung die richtigen Parameter zu w"ahlen um gute Resultate zu erreichen. Dieser Abschnitt beschreibt einige Parameter, die man w"ahlen muss wenn man mit libsvm arbeitet.
+
+Folgende Parameter muss man w"ahlen:
+\begin{itemize}
+\item Parameter C
+\item Kernelfunktion
+  \begin{itemize}
+  \item  $\sigma^2$ (Wenn man den Gaussion Kernel verwendet)
+  \end{itemize}
+\end{itemize}
+
+Der Paramter $C$ kontrolliert, ob falsch klassifizierte Objekte, w"ahrend dem Training der SVM, als schlimm erachtet werden. Manchmal m"ochte man lieber Fehler zulassen um Overfitting zu vermeiden. Je gr"osser $C$ je genauer wird die Decision Boundary an das Trainingset angepasst. 
+
+In Abbilding \ref{fig:c100} zeigt ein 2D Beispiel von Traningsdaten. Schwarze Kreuze sind positive Beispiel. Gelbe Kreise sind negative Beispiele. Links aussen befindet sich ein positives Beispiel, dass wahrscheinlich ein Aussreisser darstellt. Mit einem hohen $C$ Wert, wird die Decision Boundary (blau) so an die Trainingsdaten angepasst, dass alle Objekte richtig klassifiziert werden. Wir sehen aber, dass es wenig Sinn macht den Ausreisser auch richtig zu klassifizieren.
+
+\begin{figure}
+  \includegraphics[scale=0.5]{c100}
+  \centering
+  \label{fig:c100}
+  \caption{SVM Decision Boundary mit $C = 100$}
+\end{figure}
+
+In Abbildung \ref{fig:c1} wurde der Klassifizierer mit der selben Trainingsmenge trainiert aber mit einem $C$-Wert von 1. Ein tieferer $C$-Wert bedeudet, dass Fehler zugelassen werden und Overfitting reduziert wird.
+
+\begin{figure}
+  \includegraphics[scale=0.5]{c1}
+  \centering
+  \label{fig:c1}
+  \caption{SVM Decision Boundary mit $C = 1$}
+\end{figure}
+
+Eine weitere Einstellung ist die Kernelfunktion. Wenn $n$, die Anzahl der Features, gross und es nur wenig Beispiele $m$ gibt, muss keine Kernelfunktion ausgew"ahlt werden. Wenn viele Trainingsbeispiele mit einer komplexen Funktion klassifiziert werden sollen, kann man den Gaussion Kernel verwenden.
+
+Wenn man den Gaussion Kernel verwendet, muss auch $\sigma^2$ als Parameter gew"ahlt werden. Bei einem grossen $\sigma^2$ werden Daten im Traningsset schlechter getrennt, wobei Overfitting vermieden wird. Bei einem kleinen $\sigma^2$ werden Daten im Trainingsset mit einem geringeren Fehler klassifiziert, daf"ur wird die M"oglichkeit des Overfitting vergr"ossert.
+
+
+\section{Vergleich zwischen logistischer Regression und SVM}
+\label{sec:comp}
+
+Die theoretischen Zeitkomplexit"aten der Algorithmen logistische Regression und SVM sind in der Tabelle \ref{tab:complexity} aufgelistet.  
+
+\begin{table}
+  \centering
+  \begin{tabular}{l l l}
+    Klassifizierer & Zeitkomplexit"at  \\
+    logistische Regression & $O(|\mathbb{D}|M^2)$ \\
+    SVM & $O(|\mathbb{D}|^3M)$ \\
+  \end{tabular}
+  \caption{Zeitkomplexit"at der Trainingsalgorithmen logistische Regression und SVM. $\mathbb{D}$ ist die Menge der Dokumente in der Trainingsmenge. $M$ ist die Anzahl W"orter im Vokabular.}
+  \label{tab:complexity}
+\end{table}
+
+
+Bei der logistischen Regression ist der Zeitaufwand haupts"achlich von der Optimierung der Kostenfunktion \ref{eq:simplecostfunction} abh"angig. Wenn man das Gradientenverfahren anwendet, ist der Aufwand von der Anzahl der Iterationen und der Schrittl"ange $\alpha$ abh"angig. Es gibt jedoch effizientere Verfahren, wie zum Beispiel das Newton-Verfahren. Dieses ben"otigt $O(|\mathbb{D}| M^2)$ pro Iteration \cite{minka03}.
+
+Die Zeitkomplexit"at des SVM Trainingsalgorithmus ist haupts"achlich davon abh"angig wie schnell das Optimierungsproblem \ref{eq:qp} gel"ost werden kann. Die Zeit um dieses Problem mit einem Standard QP-Solver zu l"osen verh"alt sich kubisch zur Anzahl der Traningsdokumente $\mathbb{D}$. Ausserdem nimmt der Aufwand proportional mit der Dimension $M$ der Suportvektoren zu. Die Dimension der Supportvektoren entspricht der Anzahl W"orter im Vokabular \cite{manning08}. 
+
+Im Vergleich zur logistischen Regression, findet der SVM Algorithmus eine Decision Boundary mit maximalem Abstand zu den n"achsten Punkten. SVM eignen sich jedoch besser um nicht-linear trennbare Daten zu klassifizieren, weil durch die duale Form \ref{eq:dualrep} der Kerneltrick angewendet werden kann. Ausserdem gibt der Wert der Hypothesenfunktion bei der logistischen Regression an wie wahrscheinlich es ist, ob das Objekt einer Klasse zugeordnet werden kann. Die Hypothesenfunktion der SVM gibt immer 0 oder 1 zur"uck.
+
+Experimente haben gezeigt, dass SVM's effektiver Text klassifizieren k"onnen als andere Klassifizierer \cite{manning08}. Das heisst, dass SVM's im Experimant die Dokumente mit der gr"ossten Treffsicherheit den vorgegebenen Kategorieren zugeordnet haben.
+
 
 \appendix
 
 \section{Octave Demo: Logistische Regression}
 \label{sec:code}
-
-
-\section{Rocchio classification}
-\label{sec:rocchio}
-
-Rocchio classifiation ist ein m"ogliches Verfahren um Dokumente zu klassifizieren. Die Grenzen zwischen den Klassen werden mit sogenannten centroids definiert. Ein centroid ist eine Vektor, dessen Komponente die Durchschnitts\-werte aller Vektoren der selben Klasse darstellen.
-\[
-\vec \mu(c) = \frac{1}{|D_c|} \sum_{d \in D} \vec v (d)
-\]
-$\vec (d)$ ist die Vektor space Repr"asentation. $D_c$ ist die Menge aller Dokumente der Klasse, dessen centroid berechnet werden soll.
-
-Neue Dokumente werden nach folgender Regel zugeordnet: Es wird die tdf-idf repr"asentation $\vec v (d)$ f"ur das neue Dokument $d$ berechnet. Dann wird $d$ derjenigen Klasse zugeordnet zu dessen centroid $\vec v (d)$ die geringste Distanz hat.
 
 \begin{algorithm}
 \caption{Rocchio Trainings-Algorithmus}
@@ -408,6 +462,11 @@ Nello Cristianini,
 An Introduction to Support Vector Machines an other kernel-based learning methods
 Cambridge University Press,
 2000
+
+\bibitem{minka03}
+Thomas P. Minka,
+A comparison of numerical optimizers for logistic regression,
+2003
 
 \end{thebibliography}
 
