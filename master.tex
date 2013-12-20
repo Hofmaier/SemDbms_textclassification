@@ -1,6 +1,6 @@
 
 \documentclass[12pt,a4paper,twoside]{article}
-
+\usepackage{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage[ngerman]{babel}
 \usepackage{amsmath,amssymb,amsfonts}
@@ -20,6 +20,10 @@ captionpos=b
 \title{Text classification mit Machine Learning Methoden}
 \author{Lukas Hofmaier \texttt{lukas.hofmaier@hsr.ch}}
 \maketitle
+
+\begin{abstract}
+Logistische Regression und Support Vector Machine's werden oft f"ur das Problem der Text Classification eingesetzt. Text Classification wird im Gebiet der Information Retrieval eingesetzt, um eine grosse Menge von Texten automatisch einem Thema zuzuordnen.  Dieser Artikel soll die grundlegende Funktionsweise der beiden Verfahren erkl"aren. Die Vor- und Nachteile der beiden Verfahren werden gegeneinander abgewogen. Um gute Resultate der Textklassikation zu erhalten ist ein Verst"adnis f"ur die beiden Verfahren vorteilhaft. Ausserdem ist die Wahl der Parameter wichtig um Overfitting oder Underfitting zu vermeiden.
+\end{abstract}
 
 \section{Das Text Classification Problem}
 \label{sec:problem}
@@ -50,7 +54,7 @@ Die Trainingsdaten sind der Input der Lernmethode $\Gamma$. $\Gamma$ gibt die En
 \Gamma(\mathbb{D}) = \gamma
 \]
 
-\section{Dokumenterepr"asentation}
+\section{Dokumentenrepr"asentation}
 \label{sec:linearclassifiers}
 
 \subsection{Vector space model}
@@ -422,25 +426,18 @@ Im Vergleich zur logistischen Regression, findet der SVM Algorithmus eine Decisi
 
 Experimente haben gezeigt, dass SVM's effektiver Text klassifizieren k"onnen als andere Klassifizierer \cite{manning08}. Das heisst, dass SVM's im Experimant die Dokumente mit der gr"ossten Treffsicherheit den vorgegebenen Kategorieren zugeordnet haben.
 
+\section{Schlusswort}
+\label{sec:conclusion}
+Logistische Regression ist ein n"utzliches Verfahren, um Daten zu klassifizieren. Das Verfahren kann Daten klassifizieren, die linear-trennbar sind. Beispiele in der Trainingsmenge, die nahe an der Decision Boundary sind tragen mehr zur Kostenfunktoin bei. Wenn die Daten nicht linear-trennbar sind, kann man zus"atzliche Dimensionen durch Feature Mapping hinzuf"ugen. Dabei entsteht das Problem des Overfitting. Overfitting kann durch Regularisation entgegengewirkt werden. Es gibt viele M"oglichkeiten um die Kostenfunktion zu Optimieren.
+
+Support Vector Machines sind state-of-the-art Klassifizierer. Eine SVM ist ein sogenannter Large-Margin-Klassifizierer. Ein umfassender "Uberblick setzt das Verst"adnis von dualen Repr"asentationen, Feaures spaces, Optimierungstheory, Lagrangemultiplikatoren und Algorithmik. SVM's finden Decision Boundaries die den Abstand zu den n"achsten Beipielen in der Trainingsmenge maximieren. Die duale Form des Optimierungsproblem, erlaubt es den Kerneltrick einzusetzen. SVM's eignen sich um den Feature Space mit Kernelfunktionen zu erweitern.
+
+Die Laufzeit von SVM's und von logistischer Regression ist vorallem von den Optmierungsalgorithmen abh"angig. Logistische Regression eigent sich vorallem Trainingsdaten zu analisieren, die viele Beispiele enthalten und deren Beispiele vergleichsweise wenig Dimensionen haben. SVM's eignen sich bei einer kleinen Anzahl Traningsbeispielen deren Featurevektoren viele Dimensionen haben.
 
 \appendix
 
 \section{Octave Demo: Logistische Regression}
-\label{sec:code}
-
-\begin{algorithm}
-\caption{Rocchio Trainings-Algorithmus}
-\begin{algorithmic}
-
-\ForAll{ $c_i \in $ Klasses} 
-\State $ D_j \gets  \{d : (d,c_j) \in$ Classes $\}$
-\State  $\vec \mu_j \gets \frac{1}{|D_c|} \sum_{d \in D} \vec v (d)$
-\EndFor
-
-\Return ${\vec \mu_1, \dots , \vec \mu_n }$    
- \end{algorithmic}  
-\end{algorithm}
-
+\label{sec:code}c
 
 \lstinputlisting[label={lst:logisticregression},caption={Octave Skript f"ur logistische Regression},numbers=left]{logisticregression.m}
 
@@ -467,6 +464,11 @@ Cambridge University Press,
 Thomas P. Minka,
 A comparison of numerical optimizers for logistic regression,
 2003
+
+\bibitem{ng13}
+Andrew Ng,
+Machine Learning (Onlinekurs),
+\url{https://class.coursera.org/ml-004/class/index}
 
 \end{thebibliography}
 

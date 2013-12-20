@@ -11,12 +11,12 @@ grad = 1/m .* (X' * (h_theta - y));
 end
 
 function theta = gradientDescent(X, y, theta, alpha, num_iters)
-%gradientDescent f"uhrt einen Gradientenabstieg 
-%aus und gibt den Vektor Theta zur"uck.
+%gradientDescent fuehrt einen Gradientenabstieg 
+%aus und gibt den Vektor Theta zurueck.
 %   theta = gradientDescent(x, y, theta, alpha, num_iters) 
 %   aktuallisiert theta indem 
 %   der Gradientenabstieg num_iters Schritte mit 
-%   der Lernrate alpha ausf"uhrt.
+%   der Lernrate alpha ausfuehrt.
 
 m = length(y); % Anzahl Trainingsbeispiele
 for iter = 1:num_iters
